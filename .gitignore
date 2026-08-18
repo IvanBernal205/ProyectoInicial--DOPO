@@ -1,0 +1,10 @@
+# Compilados de Java
+*.class
+
+# Archivos generados por BlueJ
+*.ctxt
+bluej.pkg
+bluej.pkh
+
+# Javadoc generado
+doc/
