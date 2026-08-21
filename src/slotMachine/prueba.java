@@ -39,7 +39,7 @@ public class prueba
         for(Wheel wh : machine.getWheels()){
             System.out.println("colorWh2: "+wh.getShownSymbol().getColor());
         }
-        machine.pintar();
+        machine.makeVisible();
 
         
         if (false){

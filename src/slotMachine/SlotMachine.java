@@ -1,6 +1,5 @@
 package slotMachine;
 import java.util.ArrayList;
-import java.util.Collections;
 /**
  * Write a description of class SlotMachine here.
  * 
@@ -13,12 +12,14 @@ public class SlotMachine
     private ArrayList<Symbol> symbols;
     private boolean isVisible;
     private boolean ok; 
+    private PaintSlotMachine psm;
 
     public SlotMachine(){
         wheels = new ArrayList<>();
         symbols = new ArrayList<>();
         isVisible = false;
         ok = true;
+        psm = new PaintSlotMachine();
     }
 
     public void addWheel(int pos){
@@ -238,7 +239,8 @@ public class SlotMachine
     }
     
     public void makeVisible(){
-        
+        isVisible = true;
+        psm.makeVisible(wheels);
     }
     
     public void makeInvisible(){
@@ -282,10 +284,6 @@ public class SlotMachine
     }
 
 
-    public void pintar(){
-        PaintSlotMachine psm = new PaintSlotMachine();
-        psm.paintAll(wheels);
-    }
 
 
 

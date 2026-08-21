@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import shapes.Circle;
 import shapes.Rectangle;
+import shapes.Triangle;
 
 public class PaintSlotMachine {
 
@@ -11,11 +12,11 @@ public class PaintSlotMachine {
     private static final int HEIGHT_CANVAS = 5; //  5*60 = 300
     private static final int WIDTH_CANVAS = 23; //  23*60 = 1380
 
-
-
-    private ArrayList<ArrayList<Integer>> grid = new ArrayList<ArrayList<Integer>>();
+    private ArrayList<ArrayList<Rectangle>> grid = new ArrayList<ArrayList<Rectangle>>();
     
-    public void paintAll(ArrayList<Wheel> wheels){
+
+
+    public void makeVisible(ArrayList<Wheel> wheels){
         paintMachine();
         paintWheels(wheels);
         paintSymbols(wheels);
@@ -23,6 +24,7 @@ public class PaintSlotMachine {
 
     private void paintMachine(){
         for (int i = 0; i < HEIGHT_CANVAS; i++) {
+            ArrayList<Rectangle> row = new ArrayList<>();
             for (int j = 0; j < WIDTH_CANVAS; j++) {
 
                 if(i == 0 || j == 0 || i == HEIGHT_CANVAS-1 || j == WIDTH_CANVAS-1 || j == WIDTH_CANVAS-2 || (i==2 && j!=1 && j!=WIDTH_CANVAS-3)){
@@ -33,9 +35,12 @@ public class PaintSlotMachine {
                 rec.changeSize(TILE, TILE);
                 rec.changePosition(j*TILE,i*TILE);
                 rec.makeVisible();
+                row.add(rec);
             }
+            grid.add(row);
         }
-    }
+        paintLever();
+}
 
     private void paintWheels(ArrayList<Wheel> wheels){
         double numWh = wheels.size();
@@ -79,5 +84,25 @@ public class PaintSlotMachine {
             cir.changePosition(xFinal, 2*TILE + 10);
             cir.makeVisible();
         }
+    }
+
+    private void paintLever(){
+        Rectangle rec = new Rectangle();
+        rec.changeColor("black");
+        rec.changeSize(10, 60);
+        rec.changePosition(21*TILE,3*TILE);
+        rec.makeVisible();
+
+        Rectangle rec1 = new Rectangle();
+        rec1.changeColor("black");
+        rec1.changeSize(70, 10);
+        rec1.changePosition(22*TILE,2*TILE);
+        rec1.makeVisible();
+
+        Circle cir = new Circle();
+        cir.changeColor("red");
+        cir.changeSize(40);
+        cir.changePosition(21*TILE+45,1*TILE+20);
+        cir.makeVisible();
     }
 }
