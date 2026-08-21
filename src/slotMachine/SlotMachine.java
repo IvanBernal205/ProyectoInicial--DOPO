@@ -25,13 +25,7 @@ public class SlotMachine
 
     public void addWheel(int pos){
         ok = false;
-        pos--;
-
-        if(pos <= 0 || wheels.isEmpty()){
-            pos = 0;
-        }else if (pos > wheels.size()){
-            pos = wheels.size() - 1;
-        }
+        pos = normalizePos(pos);
 
         Wheel wh = new Wheel();
         wheels.add(pos, wh);
@@ -43,16 +37,12 @@ public class SlotMachine
 
     public void delWheel(int pos){
         ok = false;
-        pos--;
         if(wheels.isEmpty()){
             // posible mensaje de error
             ok = true;
             return;
-        }else if(pos <= 0){
-            pos = 0;
-        }else if (pos > wheels.size()){
-            pos = wheels.size() - 1;
         }
+        pos = normalizePos(pos);
         wheels.remove(pos);
         if(isVisible){
             // quitar la rueda eliminada y re acomodar las demas
@@ -62,13 +52,7 @@ public class SlotMachine
 
     public void addSymbol(int pos, String color){
         ok = false;
-        pos--;
-
-        if(pos <= 0 || symbols.isEmpty()){
-            pos = 0;
-        }else if (pos > symbols.size()){
-            pos = symbols.size() - 1;
-        }
+        pos = normalizePos(pos);
 
         Symbol sym = new Symbol(color);
         symbols.add(pos, sym);
@@ -83,23 +67,19 @@ public class SlotMachine
 
     public void delSymbol(int pos){
         ok = false;
-        pos--;
-
         if(symbols.isEmpty()){
             // posible mensaje de error
             ok = true;
             return;
-        }else if(pos <= 0){
-            pos = 0;
-        }else if (pos > symbols.size()){
-            pos = symbols.size() - 1;
         }
+        pos = normalizePos(pos);
+
         String delColor = symbols.remove(pos).getColor();
 
         for (int i = 0; i < wheels.size(); i++) {
             Wheel wh = wheels.get(i);
             if(wh.getShownSymbol().getColor().equals(delColor)){
-
+                //revisar para que se puso este if
             }
             wh.symbolStillExist(delColor, symbols, isVisible);
         }
@@ -109,17 +89,12 @@ public class SlotMachine
 
     public void placeSymbol(int wheel, String symbol){
         ok = false;
-        wheel--;
-
         if(wheels.isEmpty()){
             // posible mensaje de error
             ok = true;
             return;
-        }else if(wheel <= 0){
-            wheel = 0;
-        }else if (wheel > wheels.size()){
-            wheel = wheels.size() - 1;
         }
+        wheel = normalizePos(wheel);
 
         boolean colorExist = false;
         Symbol sym = null;
@@ -134,7 +109,7 @@ public class SlotMachine
 
         if(colorExist){
             Wheel wh = wheels.get(wheel);
-            wh.placeSymbol(i, sym);
+            wh.placeSymbol(i, new Symbol(sym));
             if(isVisible){
                 // pintar el color asignado
             }
@@ -150,6 +125,23 @@ public class SlotMachine
 
 
 
+    private int normalizePos(int pos){
+        pos--;
+
+        if(pos <= 0 || symbols.isEmpty()){
+            pos = 0;
+        }else if (pos > symbols.size()){
+            pos = symbols.size() - 1;
+        }
+        return pos;
+    }
+
+
+
+    public void pintar(){
+        PaintSlotMachine psm = new PaintSlotMachine();
+        psm.paintAll(wheels);
+    }
 
 
 

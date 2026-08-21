@@ -28,8 +28,8 @@ public class Canvas{
 	 */
 	public static Canvas getCanvas(){
 		if(canvasSingleton == null) {
-			canvasSingleton = new Canvas("BlueJ Shapes Demo", 300, 300, 
-										 Color.white);
+			canvasSingleton = new Canvas("Slot Machine", 1380, 300, 
+										Color.white);
 		}
 		canvasSingleton.setVisible(true);
 		return canvasSingleton;
@@ -131,7 +131,7 @@ public class Canvas{
 		else if(colorString.equals("white"))
 			graphic.setColor(Color.white);
 		else
-			graphic.setColor(Color.black);
+			graphic.setColor(Color.pink);
     }
 
     /**

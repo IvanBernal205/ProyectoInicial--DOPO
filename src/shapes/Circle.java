@@ -1,6 +1,5 @@
 package shapes;
 
-import java.awt.*;
 import java.awt.geom.*;
 
 /**
@@ -48,7 +47,7 @@ public class Circle{
             canvas.draw(this, color, 
                 new Ellipse2D.Double(xPosition, yPosition, 
                 diameter, diameter));
-            canvas.wait(10);
+            canvas.wait(1);
         }
     }
 
@@ -167,6 +166,15 @@ public class Circle{
         draw();
     }
 
-
+    /**
+     * Change the position of the circle to a specific one. 
+     */
+    
+    public void changePosition(int x, int y){
+        erase();
+        yPosition = y;
+        xPosition = x;
+        draw();
+    }
 
 }

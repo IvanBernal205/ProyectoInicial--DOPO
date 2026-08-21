@@ -20,4 +20,8 @@ public class Symbol {
         return this.color;
     }
 
+    public Circle getShape(){
+        return shape;
+    }
+
 }
