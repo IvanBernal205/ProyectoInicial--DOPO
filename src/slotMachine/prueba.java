@@ -41,6 +41,8 @@ public class prueba
         }
         machine.makeVisible();
 
+        // machine.makeInvisible();
+
         
         if (false){
             for (int i = 0; i < 5; i++) {

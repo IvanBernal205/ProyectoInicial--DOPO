@@ -19,12 +19,12 @@ public class SlotMachine
         symbols = new ArrayList<>();
         isVisible = false;
         ok = true;
-        psm = new PaintSlotMachine();
+        psm = new PaintSlotMachine(wheels);
     }
 
     public void addWheel(int pos){
         ok = false;
-        pos = normalizePos(pos);
+        pos = normalizePosWheel(pos);
 
         Wheel wh = new Wheel();
         wheels.add(pos, wh);
@@ -41,7 +41,7 @@ public class SlotMachine
             ok = true;
             return;
         }
-        pos = normalizePos(pos);
+        pos = normalizePosWheel(pos);
         wheels.remove(pos);
         if(isVisible){
             // quitar la rueda eliminada y re acomodar las demas
@@ -155,7 +155,6 @@ public class SlotMachine
             spin(i);
         }
         ok = true;
-        return;
     }
     
     public String[] symbols(){
@@ -261,11 +260,12 @@ public class SlotMachine
     
     public void makeVisible(){
         isVisible = true;
-        psm.makeVisible(wheels);
+        psm.makeVisible();
     }
     
     public void makeInvisible(){
-        
+        isVisible = false;
+        psm.makeInvisible();
     }
     
     public void exit(){
