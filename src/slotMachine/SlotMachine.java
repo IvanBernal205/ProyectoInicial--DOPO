@@ -120,21 +120,42 @@ public class SlotMachine
     public void spin(int wheel){
         ok = false;
         if (wheels.isEmpty()){
-            //No se puede girar si no hay wheels posible mensaje de error
+            ok = true;
+            //mensaje de cuando no hay ruedas como se van a girar
+            return;
+        }
+        
+        wheel = normalizePos(wheel);
+        Wheel wh = wheels.get(wheel);
+        
+        Symbol simboloActual = wh.getShownSymbol();
+        
+        int indexActual = symbols.indexOf(simboloActual);
+        
+        if (indexActual < symbols.size() - 1){
+            simboloActual = symbols.get(indexActual + 1);
+            wh.placeSymbol(indexActual + 1,simboloActual);
             ok = true;
             return;
         }
         
-        wheel = normalizePosWheel(wheel);
-        int wheelPorGirar = wheels.indexOf(wheel);
-        //borrador
-        //spinnerWheel.setSymbIndex(1);
-        
-        
+        simboloActual = symbols.get(0);
+        wh.placeSymbol(0, simboloActual);
+        ok = true;
     }
     
     public void spin(){
+        ok = false;
+        if(wheels.isEmpty()){
+            ok = true;
+            return;
+        }
         
+        for (int i = 0; i < wheels.size(); i++){
+            spin(i);
+        }
+        ok = true;
+        return;
     }
     
     public String[] symbols(){
