@@ -1,8 +1,6 @@
 package slotMachine;
-
 import java.util.ArrayList;
-
-
+import java.util.Collections;
 /**
  * Write a description of class SlotMachine here.
  * 
@@ -118,13 +116,149 @@ public class SlotMachine
         ok = true;
     }
 
+    public void spin(int wheel){
+        ok = false;
+        if (wheels.isEmpty()){
+            //No se puede girar si no hay wheels posible mensaje de error
+            ok = true;
+            return;
+        }
+        
+        wheel = normalizePosWheel(wheel);
+        int wheelPorGirar = wheels.indexOf(wheel);
+        //borrador
+        //spinnerWheel.setSymbIndex(1);
+        
+        
+    }
+    
+    public void spin(){
+        
+    }
+    
+    public String[] symbols(){
+        ok = false;
+        if (symbols.isEmpty()){
+            ok = true;
+            return null;
+        }
+        
+        int totalSimbolos = symbols.size();
+        String [] simbolos = new String[totalSimbolos];
+        
+        Symbol simboloActual;
+        String colorActual;
+        
+        for(int i = 0; i < totalSimbolos; i++){
+            simboloActual = symbols.get(i);
+            colorActual = simboloActual.getColor();
+            
+            simbolos [i] = colorActual;
+        }
+        
+        ok = true;
+        return simbolos;
+    }
+    
+    public int distincSymbols(){ //cantidad de simbolos distintos
+        ok = false;
+        
+        if (symbols.isEmpty()){
+            ok = true;
+            return 0;
+        }
+        ArrayList <String> coloresSimbolos = new ArrayList<>();
+        
+        Symbol simboloActual;
+        String colorActual;
+        
+        for (int i = 0; i < symbols.size(); i ++){
+            simboloActual = symbols.get(i);
+            colorActual = simboloActual.getColor();
+            
+            if(!coloresSimbolos.contains(colorActual)){
+                coloresSimbolos.add(colorActual);
+            }
+        }
+        
+        int tamanoFinal = coloresSimbolos.size();
+        ok = true;
+        return tamanoFinal;
+    }
+    
+    public String[] configuration(){
+        ok = false;        
+        if (wheels.isEmpty()){
+            ok = true;
+            return null;
+        }
+        
+        String [] elementosVisibles = new String[wheels.size()];
+        
+        for (int i = 0; i < wheels.size(); i++){
+            Wheel wh = wheels.get(i);
+            Symbol simboloActual = wh.getShownSymbol();
+            
+            elementosVisibles[i] = simboloActual.getColor();
+        }
+        ok = true;
+        return elementosVisibles;
+    }
+    
+    public boolean isJackpot(){
+        ok = false;
+        
+        if (wheels.isEmpty()){
+            //No hay ruedas
+            ok = true;
+            return false;
+        }
+        
+        Wheel wh;
+        wh = wheels.get(0);
+        
+        Symbol firstSymbol = wh.getShownSymbol();
+        Symbol actualSymbol;
+        
+        String firstColor = firstSymbol.getColor() ;
+        String actualColor;
+        
+        for (int i = 1; i < wheels.size() ; i++){
+            wh = wheels.get(i);
+            actualSymbol = wh.getShownSymbol();
+            actualColor = actualSymbol.getColor();
+            
+            if (!firstColor.equals(actualColor)){
+                ok = true;
+                return false;
+            }
+        }
+        ok = true;
+        return true;
+    }
+    
+    public void makeVisible(){
+        
+    }
+    
+    public void makeInvisible(){
+        
+    }
+    
+    public void exit(){
+        
+    }
+    
+    public boolean ok(){
+        return ok;
+    }
 
 
 
 
 
 
-
+    //devuelve la posicion real 
     private int normalizePos(int pos){
         pos--;
 
@@ -135,7 +269,17 @@ public class SlotMachine
         }
         return pos;
     }
+    
+    private int normalizePosWheel(int pos){
+        pos--;
 
+        if(pos <= 0 || wheels.isEmpty()){
+            pos = 0;
+        }else if (pos > wheels.size()){
+            pos = wheels.size() - 1;
+        }
+        return pos;
+    }
 
 
     public void pintar(){

@@ -1,5 +1,4 @@
 package slotMachine;
-
 import java.util.ArrayList;
 
 public class Wheel {
@@ -34,10 +33,6 @@ public class Wheel {
     public Symbol getShownSymbol(){
         return shownSymbol;
     }
-
-
-
-
 
 
 
