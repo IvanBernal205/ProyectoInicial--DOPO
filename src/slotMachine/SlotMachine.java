@@ -1,5 +1,6 @@
 package slotMachine;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 /**
  * Write a description of class SlotMachine here.
  * 
@@ -22,6 +23,9 @@ public class SlotMachine
         psm = new PaintSlotMachine(wheels);
     }
 
+    /*
+     * 
+     */
     public void addWheel(int pos){
         ok = false;
         pos = normalizePosWheel(pos);
@@ -34,17 +38,25 @@ public class SlotMachine
         ok = true;
     }
 
+    /*
+     * 
+     */
     public void delWheel(int pos){
         ok = false;
         if(wheels.isEmpty()){
-            // posible mensaje de error
+            // posible mensaje de error OK
+            if(isVisible){
+                JOptionPane.showMessageDialog(null, "No puedes eliminar una rueda porque aún no creas ninguna.");
+            }
             ok = true;
             return;
         }
         pos = normalizePosWheel(pos);
         wheels.remove(pos);
         if(isVisible){
-            // quitar la rueda eliminada y re acomodar las demas
+            // quitar la rueda eliminada y re acomodar las demas OK 
+            //JOptionPane.showMessageDialog(null, "La rueda fue eliminada.");
+
         }
         ok = true;
     }
@@ -67,7 +79,9 @@ public class SlotMachine
     public void delSymbol(int pos){
         ok = false;
         if(symbols.isEmpty()){
-            // posible mensaje de error
+            if(isVisible){
+                JOptionPane.showMessageDialog(null, "No se puede eliminar porque ningun simbolo ha sido creado.");
+            }
             ok = true;
             return;
         }
@@ -89,7 +103,10 @@ public class SlotMachine
     public void placeSymbol(int wheel, String symbol){
         ok = false;
         if(wheels.isEmpty()){
-            // posible mensaje de error
+            // posible mensaje de error OK
+            if(isVisible){
+                JOptionPane.showMessageDialog(null, "No se puede agregar un simbolo si no hay ruedas.");
+            }
             ok = true;
             return;
         }
@@ -121,7 +138,9 @@ public class SlotMachine
         ok = false;
         if (wheels.isEmpty()){
             ok = true;
-            //mensaje de cuando no hay ruedas como se van a girar
+            if(isVisible){
+                JOptionPane.showMessageDialog(null, "No se puede girar porque no hay ruedas.");
+            }
             return;
         }
         
@@ -147,6 +166,9 @@ public class SlotMachine
     public void spin(){
         ok = false;
         if(wheels.isEmpty()){
+            if(isVisible){
+                JOptionPane.showMessageDialog(null,"No hay ruedas para girar.");
+            }
             ok = true;
             return;
         }
@@ -160,6 +182,9 @@ public class SlotMachine
     public String[] symbols(){
         ok = false;
         if (symbols.isEmpty()){
+            if(isVisible){
+                JOptionPane.showMessageDialog(null, "No hay simbolos.");
+            }
             ok = true;
             return null;
         }
@@ -185,6 +210,9 @@ public class SlotMachine
         ok = false;
         
         if (symbols.isEmpty()){
+            if(isVisible){
+                JOptionPane.showMessageDialog(null,"No hay simbolos.");
+            }
             ok = true;
             return 0;
         }
@@ -210,6 +238,9 @@ public class SlotMachine
     public String[] configuration(){
         ok = false;        
         if (wheels.isEmpty()){
+            if(isVisible){
+                JOptionPane.showMessageDialog(null, "No hay ruedas.");
+            }
             ok = true;
             return null;
         }
@@ -230,7 +261,10 @@ public class SlotMachine
         ok = false;
         
         if (wheels.isEmpty()){
-            //No hay ruedas
+            //No hay ruedas OK
+            if(isVisible){
+                JOptionPane.showMessageDialog(null, "No hay ruedas.");
+            }
             ok = true;
             return false;
         }
