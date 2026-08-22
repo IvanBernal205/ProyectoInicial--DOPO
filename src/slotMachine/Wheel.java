@@ -34,10 +34,7 @@ public class Wheel {
         return shownSymbol;
     }
 
-
-
-    public void xd(Symbol sym){
-        symbIndex = 1;
-        shownSymbol = new Symbol(sym);
+    public int getSymbIndex(){
+        return symbIndex;
     }
 }

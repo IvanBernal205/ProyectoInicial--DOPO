@@ -167,7 +167,7 @@ public class Triangle{
             int[] xpoints = { xPosition, xPosition + (width/2), xPosition - (width/2) };
             int[] ypoints = { yPosition, yPosition + height, yPosition + height };
             canvas.draw(this, color, new Polygon(xpoints, ypoints, 3));
-            canvas.wait(1);
+            canvas.wait(5);
         }
     }
 

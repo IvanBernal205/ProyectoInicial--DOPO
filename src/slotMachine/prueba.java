@@ -11,8 +11,13 @@ import shapes.Rectangle;
  */
 public class prueba
 {
+    SlotMachine machine = new SlotMachine();
     public static void main(){
-        SlotMachine machine = new SlotMachine();
+        prueba p = new prueba();
+        p.prueba2();
+    }
+
+    public void prueba1(){ 
         machine.addSymbol(1, "blue"); // [blue]
         machine.addSymbol(2, "red");    // [blue,red]
         machine.addSymbol(2, "green");  // [green,blue,red]
@@ -34,13 +39,15 @@ public class prueba
         for(Wheel wh : machine.getWheels()){
             System.out.println("colorWh: "+wh.getShownSymbol().getColor());
         }
-        machine.delSymbol(2);
+        //machine.delSymbol(2);
 
         for(Wheel wh : machine.getWheels()){
             System.out.println("colorWh2: "+wh.getShownSymbol().getColor());
         }
         machine.makeVisible();
-
+        // machine.spin(1);
+        machine.spin();
+        
         // machine.makeInvisible();
 
         
@@ -97,5 +104,22 @@ public class prueba
         }
         
 
+    }
+
+    public void pruebaAddWheel(){
+        machine.makeVisible();
+        machine.addWheel(1);
+        machine.addWheel(-10);
+        machine.addWheel(4);
+
+        System.out.println("Rest:" + machine.getWheels().size());
+    }
+
+    public void prueba2(){
+        machine.addSymbol(1, "red");
+        machine.addSymbol(2, "blue");
+
+        int d = machine.symbols().length;
+        int t = machine.distinctSymbols();
     }
 }

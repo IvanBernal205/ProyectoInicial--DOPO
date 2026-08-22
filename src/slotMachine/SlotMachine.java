@@ -11,63 +11,51 @@ public class SlotMachine
 {
     private ArrayList<Wheel> wheels;
     private ArrayList<Symbol> symbols;
+    private PaintSlotMachine psm;
     private boolean isVisible;
     private boolean ok; 
-    private PaintSlotMachine psm;
 
     public SlotMachine(){
         wheels = new ArrayList<>();
         symbols = new ArrayList<>();
-        isVisible = false;
-        ok = true;
         psm = new PaintSlotMachine(wheels);
+        ok = true;
     }
 
-    /*
-     * 
-     */
+    // Revisado
     public void addWheel(int pos){
-        ok = false;
         pos = normalizePosWheel(pos);
 
         Wheel wh = new Wheel();
         wheels.add(pos, wh);
-        if(isVisible){
-            //pintar nueva rueda sin ningun simbolo
-        }
+
+        if(isVisible) psm.reDraw();
         ok = true;
     }
 
-    /*
-     * 
-     */
+    // Revisado
     public void delWheel(int pos){
-        ok = false;
         if(wheels.isEmpty()){
-            // posible mensaje de error OK
-            if(isVisible){
-                JOptionPane.showMessageDialog(null, "No puedes eliminar una rueda porque aún no creas ninguna.");
-            }
-            ok = true;
+            messageForUser("No puedes eliminar una rueda porque aún no creas ninguna.");
             return;
         }
+
         pos = normalizePosWheel(pos);
         wheels.remove(pos);
-        if(isVisible){
-            // quitar la rueda eliminada y re acomodar las demas OK 
-            //JOptionPane.showMessageDialog(null, "La rueda fue eliminada.");
+        if(isVisible) psm.reDraw();
 
-        }
         ok = true;
     }
 
+    // Revisado
     public void addSymbol(int pos, String color){
-        ok = false;
-        pos = normalizePos(pos);
+        if (existColor(color)) return; // Si el color ya habia sido agreado no hace nada
 
+        pos = normalizePosSym(pos);
         Symbol sym = new Symbol(color);
         symbols.add(pos, sym);
 
+        // Se actulizan los indices de las ruedas que se vieron afectadas por el nuevo simbolo
         for (int i = pos+1; i < wheels.size(); i++) {
             Wheel wh = wheels.get(i);
             wh.setSymbIndex(i+1);
@@ -76,173 +64,149 @@ public class SlotMachine
         ok = true;
     }
 
-    public void delSymbol(int pos){
-        ok = false;
+    // revisado
+    public void delSymbol(String symbol){
         if(symbols.isEmpty()){
-            if(isVisible){
-                JOptionPane.showMessageDialog(null, "No se puede eliminar porque ningun simbolo ha sido creado.");
-            }
-            ok = true;
+            messageForUser("No se puede eliminar porque ningun simbolo ha sido creado.");
             return;
         }
-        pos = normalizePos(pos);
 
-        String delColor = symbols.remove(pos).getColor();
-
-        for (int i = 0; i < wheels.size(); i++) {
-            Wheel wh = wheels.get(i);
-            if(wh.getShownSymbol().getColor().equals(delColor)){
-                //revisar para que se puso este if
-            }
-            wh.symbolStillExist(delColor, symbols, isVisible);
+        if(!existColor(symbol)) return; // Si el color no exite, no hay nada que borrar
+        
+        for (Wheel wh : wheels) {
+            // si el simbolo eliminado esta siendo mostrado por alguna
+            // rueda entonces se debe actulizar a otro simbolo
+            wh.symbolStillExist(symbol, symbols, isVisible);
         }
-
         ok = true;
     }
 
+    // revisado
     public void placeSymbol(int wheel, String symbol){
-        ok = false;
-        if(wheels.isEmpty()){
-            // posible mensaje de error OK
-            if(isVisible){
-                JOptionPane.showMessageDialog(null, "No se puede agregar un simbolo si no hay ruedas.");
-            }
-            ok = true;
+        if(wheels.isEmpty() || symbols.isEmpty()){
+            messageForUser("No se puede agregar un simbolo si no hay ruedas.");
             return;
         }
-        wheel = normalizePos(wheel);
 
-        boolean colorExist = false;
-        Symbol sym = null;
-        int i;
-        for ( i = 0; i < symbols.size(); i++) {
-            sym = symbols.get(i);
-            if(sym.getColor().equals(symbol)){
-                colorExist = true;
+        wheel = normalizePosWheel(wheel);
+        
+        Symbol symb = null;
+        int i = 0;
+        // Si el color existe guarda el indice y el simbolo para asignarlo
+        for (Symbol s : symbols) {
+            if(symbol.equals(s.getColor())){
+                symb = s;
                 break;
             }
+            i++;
         }
 
-        if(colorExist){
+        // si el simbolo existe entonces actuliza la rueda correspondiente
+        if(symb != null){
             Wheel wh = wheels.get(wheel);
-            wh.placeSymbol(i, new Symbol(sym));
-            if(isVisible){
-                // pintar el color asignado
-            }
+            wh.placeSymbol(i, new Symbol(symb)); // Linea dificil de explicar
+            if(isVisible) psm.reDraw();
+        }else{
+            messageForUser("El simbolo que desea asignar no existe");
+            return;
         }
-        
+
         ok = true;
     }
 
+    // 
     public void spin(int wheel){
         ok = false;
-        if (wheels.isEmpty()){
-            ok = true;
-            if(isVisible){
-                JOptionPane.showMessageDialog(null, "No se puede girar porque no hay ruedas.");
-            }
+        if (wheels.isEmpty() || symbols.isEmpty()){
+            messageForUser("No se puede girar porque no hay ruedas.");
             return;
         }
         
-        wheel = normalizePos(wheel);
+        wheel = normalizePosWheel(wheel);
         Wheel wh = wheels.get(wheel);
-        
-        Symbol simboloActual = wh.getShownSymbol();
-        
-        int indexActual = symbols.indexOf(simboloActual);
-        
-        if (indexActual < symbols.size() - 1){
-            simboloActual = symbols.get(indexActual + 1);
-            wh.placeSymbol(indexActual + 1,simboloActual);
+        Symbol actualSymb = wh.getShownSymbol();
+
+        if (actualSymb == null){
             ok = true;
-            return;
+            return;            
         }
+
+        int actualIndex = wh.getSymbIndex();
+        int nextIndex = (actualIndex+1)%symbols.size();
         
-        simboloActual = symbols.get(0);
-        wh.placeSymbol(0, simboloActual);
+        Symbol s = symbols.get(nextIndex);
+        wh.placeSymbol(nextIndex, new Symbol(s));
+        
+        if(isVisible){
+            // Cuando se usa spin() se repinta cada qe una rueda gira y se ve raro.
+            psm.reDraw();
+        }
         ok = true;
     }
     
     public void spin(){
-        ok = false;
-        if(wheels.isEmpty()){
-            if(isVisible){
-                JOptionPane.showMessageDialog(null,"No hay ruedas para girar.");
-            }
-            ok = true;
+        if(wheels.isEmpty() || symbols.isEmpty()){
+            messageForUser("No hay ruedas para girar.");
             return;
         }
         
-        for (int i = 0; i < wheels.size(); i++){
-            spin(i);
-        }
+        for (int i = 1; i < wheels.size()+1; i++)  spin(i);
+
         ok = true;
     }
     
     public String[] symbols(){
         ok = false;
         if (symbols.isEmpty()){
-            if(isVisible){
-                JOptionPane.showMessageDialog(null, "No hay simbolos.");
-            }
+            messageForUser("No hay simbolos.");
             ok = true;
-            return null;
+            return new String[0];
         }
         
-        int totalSimbolos = symbols.size();
-        String [] simbolos = new String[totalSimbolos];
-        
-        Symbol simboloActual;
-        String colorActual;
-        
-        for(int i = 0; i < totalSimbolos; i++){
-            simboloActual = symbols.get(i);
-            colorActual = simboloActual.getColor();
-            
-            simbolos [i] = colorActual;
+        int totalSymbols = symbols.size();
+        String [] listSymbols = new String[totalSymbols];
+
+        int i = 0;
+        for (Symbol s : symbols) {
+            listSymbols[i] = s.getColor();
+            i++;
         }
         
         ok = true;
-        return simbolos;
+        return listSymbols;
     }
     
-    public int distincSymbols(){ //cantidad de simbolos distintos
-        ok = false;
+    public int distinctSymbols(){ //cantidad de simbolos distintos
         
-        if (symbols.isEmpty()){
-            if(isVisible){
-                JOptionPane.showMessageDialog(null,"No hay simbolos.");
-            }
+        if (wheels.isEmpty()){
+            messageForUser("No hay ruedas.");
             ok = true;
             return 0;
         }
+
         ArrayList <String> coloresSimbolos = new ArrayList<>();
         
-        Symbol simboloActual;
-        String colorActual;
+        Symbol actualSymbol;
+        String actualColor;
         
-        for (int i = 0; i < symbols.size(); i ++){
-            simboloActual = symbols.get(i);
-            colorActual = simboloActual.getColor();
+        for (int i = 0; i < wheels.size(); i ++){
+            actualSymbol = wheels.get(i).getShownSymbol();
+            actualColor = actualSymbol.getColor();
             
-            if(!coloresSimbolos.contains(colorActual)){
-                coloresSimbolos.add(colorActual);
+            if(!coloresSimbolos.contains(actualColor)){
+                coloresSimbolos.add(actualColor);
             }
         }
         
-        int tamanoFinal = coloresSimbolos.size();
+        int totalDistinSymb = coloresSimbolos.size();
         ok = true;
-        return tamanoFinal;
+        return totalDistinSymb;
     }
     
     public String[] configuration(){
-        ok = false;        
         if (wheels.isEmpty()){
-            if(isVisible){
-                JOptionPane.showMessageDialog(null, "No hay ruedas.");
-            }
-            ok = true;
-            return null;
+            messageForUser("No hay ruedas.");
+            return new String[0];
         }
         
         String [] elementosVisibles = new String[wheels.size()];
@@ -250,6 +214,10 @@ public class SlotMachine
         for (int i = 0; i < wheels.size(); i++){
             Wheel wh = wheels.get(i);
             Symbol simboloActual = wh.getShownSymbol();
+            if(simboloActual == null) {
+                elementosVisibles[i] = null; //revisar si se deberia poner null o no
+                continue;
+            }
             
             elementosVisibles[i] = simboloActual.getColor();
         }
@@ -259,12 +227,8 @@ public class SlotMachine
     
     public boolean isJackpot(){
         ok = false;
-        
-        if (wheels.isEmpty()){
-            //No hay ruedas OK
-            if(isVisible){
-                JOptionPane.showMessageDialog(null, "No hay ruedas.");
-            }
+        if (wheels.isEmpty() || symbols.isEmpty()){
+            messageForUser("No hay ruedas.");
             ok = true;
             return false;
         }
@@ -281,6 +245,10 @@ public class SlotMachine
         for (int i = 1; i < wheels.size() ; i++){
             wh = wheels.get(i);
             actualSymbol = wh.getShownSymbol();
+            if (actualSymbol == null){
+                ok = true;
+                return false;
+            }
             actualColor = actualSymbol.getColor();
             
             if (!firstColor.equals(actualColor)){
@@ -298,8 +266,7 @@ public class SlotMachine
     }
     
     public void makeInvisible(){
-        isVisible = false;
-        psm.makeInvisible();
+        psm.makeInvisible(); // falta esta logica :/
     }
     
     public void exit(){
@@ -316,13 +283,14 @@ public class SlotMachine
 
 
     //devuelve la posicion real 
-    private int normalizePos(int pos){
+    private int normalizePosSym(int pos){
         pos--;
 
         if(pos <= 0 || symbols.isEmpty()){
             pos = 0;
         }else if (pos > symbols.size()){
-            pos = symbols.size() - 1;
+            pos = symbols.size();
+            // revisar si falta -1
         }
         return pos;
     }
@@ -334,11 +302,24 @@ public class SlotMachine
             pos = 0;
         }else if (pos > wheels.size()){
             pos = wheels.size() - 1;
+            // revisar ese - 1
         }
         return pos;
     }
 
+    private void messageForUser(String ms){
+        if(isVisible)
+            JOptionPane.showMessageDialog(null, ms);
+    }
 
+    // Verifica si el simbolo ya existe el alista de symbols
+    private boolean existColor(String symbol){
+        for (Symbol s : symbols) {
+            if(symbol.equals(s.getColor()))
+                return true;
+        }
+        return false;
+    }
 
 
 

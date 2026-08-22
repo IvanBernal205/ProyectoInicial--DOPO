@@ -9,6 +9,7 @@ public class Symbol {
 
     public Symbol(String color){
         this.color = color;
+        this.shape = null;
     }
 
     public Symbol(Symbol original){

@@ -13,7 +13,8 @@ public class PaintSlotMachine {
     private boolean visible = false;
     private ArrayList<Wheel> wheels;
 
-    private ArrayList<Rectangle> rect = new ArrayList<Rectangle>();
+    private ArrayList<Rectangle> machineRecs = new ArrayList<Rectangle>();
+    private ArrayList<Rectangle> bars = new ArrayList<>();
     private ArrayList<Circle> circ = new ArrayList<Circle>();   
 
     public PaintSlotMachine(ArrayList<Wheel> wheels){
@@ -29,6 +30,7 @@ public class PaintSlotMachine {
 
     public void makeVisible(){
         visible = true;
+        paintMachine();
         reDraw();
     }
 
@@ -37,21 +39,20 @@ public class PaintSlotMachine {
         reDraw();
     }
 
-    private void reDraw(){
-        for (Rectangle r : rect) r.makeInvisible();
+    public void reDraw(){
+        for (Rectangle r : bars) r.makeInvisible();
         for (Circle c : circ) c.makeInvisible();
-        rect.clear();
+        bars.clear();
         circ.clear();
 
-        paintMachine();
         paintWheels();
         paintSymbols();
 
         if (visible){
-            for (Rectangle r : rect) r.makeVisible();
+            for (Rectangle re : machineRecs) re.makeVisible();
+            for (Rectangle r : bars) r.makeVisible();
             for (Circle c : circ) c.makeVisible();
         }
-
     }
 
 
@@ -67,7 +68,7 @@ public class PaintSlotMachine {
                 rec.changeColor("black");
                 rec.changeSize(TILE, TILE);
                 rec.changePosition(j*TILE,i*TILE);
-                rect.add(rec);
+                machineRecs.add(rec);
             }
         }
         paintLever();
@@ -88,7 +89,7 @@ public class PaintSlotMachine {
             int xFinal = (int) x-1;
 
             rec.changePosition(xFinal,2*TILE);
-            rect.add(rec);
+            bars.add(rec);
         }
     }
 
@@ -100,6 +101,7 @@ public class PaintSlotMachine {
 
         for (int i = 0; i < numWh; i++) {
             Symbol symb = wheels.get(i).getShownSymbol();
+            if (symb == null || symb.getShape() == null) continue;
             Circle cir = symb.getShape();
             cir.changeColor(symb.getColor());
             cir.changeSize(40);
@@ -122,18 +124,19 @@ public class PaintSlotMachine {
         rec.changeColor("black");
         rec.changeSize(10, 60);
         rec.changePosition(21*TILE,3*TILE);
-        rect.add(rec);
+        machineRecs.add(rec);
 
         Rectangle rec1 = new Rectangle();
         rec1.changeColor("black");
         rec1.changeSize(70, 10);
         rec1.changePosition(22*TILE,2*TILE);
-        rect.add(rec1);
+        machineRecs.add(rec1);
 
         Circle cir = new Circle();
         cir.changeColor("red");
         cir.changeSize(40);
         cir.changePosition(21*TILE+45,1*TILE+20);
-        circ.add(cir);
+        //circ.add(cir);
+        cir.makeVisible();
     }
 }

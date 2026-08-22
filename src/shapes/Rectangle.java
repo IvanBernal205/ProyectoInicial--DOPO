@@ -169,7 +169,7 @@ public class Rectangle{
             canvas.draw(this, color,
                 new java.awt.Rectangle(xPosition, yPosition, 
                                        width, height));
-            canvas.wait(1);
+            canvas.wait(5);
         }
     }
 
