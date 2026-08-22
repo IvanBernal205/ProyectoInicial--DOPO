@@ -118,8 +118,10 @@ public class prueba
     public void prueba2(){
         machine.addSymbol(1, "red");
         machine.addSymbol(2, "blue");
+        machine.addSymbol(3, "green");
+        machine.addSymbol(5, "yellow");
+        machine.delSymbol("red");
 
-        int d = machine.symbols().length;
-        int t = machine.distinctSymbols();
+        String [] g = machine.symbols();
     }
 }

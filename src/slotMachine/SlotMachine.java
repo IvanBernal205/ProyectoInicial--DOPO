@@ -24,6 +24,7 @@ public class SlotMachine
 
     // Revisado
     public void addWheel(int pos){
+        ok = false;
         pos = normalizePosWheel(pos);
 
         Wheel wh = new Wheel();
@@ -35,6 +36,7 @@ public class SlotMachine
 
     // Revisado
     public void delWheel(int pos){
+        ok = false;
         if(wheels.isEmpty()){
             messageForUser("No puedes eliminar una rueda porque aún no creas ninguna.");
             return;
@@ -49,6 +51,7 @@ public class SlotMachine
 
     // Revisado
     public void addSymbol(int pos, String color){
+        ok = false;
         if (existColor(color)) return; // Si el color ya habia sido agreado no hace nada
 
         pos = normalizePosSym(pos);
@@ -58,7 +61,7 @@ public class SlotMachine
         // Se actulizan los indices de las ruedas que se vieron afectadas por el nuevo simbolo
         for (int i = pos+1; i < wheels.size(); i++) {
             Wheel wh = wheels.get(i);
-            wh.setSymbIndex(i+1);
+            wh.setSymbIndex(i+1); // BUG es el indice incorrecto
         }
 
         ok = true;
@@ -66,13 +69,21 @@ public class SlotMachine
 
     // revisado
     public void delSymbol(String symbol){
+        ok = false;
         if(symbols.isEmpty()){
             messageForUser("No se puede eliminar porque ningun simbolo ha sido creado.");
             return;
         }
 
-        if(!existColor(symbol)) return; // Si el color no exite, no hay nada que borrar
+        if(!existColor(symbol)) return; // Si el color no existe, no hay nada que borrar
         
+        for (Symbol s : symbols) {
+            if(symbol.equals(s.getColor())){
+                symbols.remove(s);
+                break;
+            }
+        }
+
         for (Wheel wh : wheels) {
             // si el simbolo eliminado esta siendo mostrado por alguna
             // rueda entonces se debe actulizar a otro simbolo
@@ -300,7 +311,7 @@ public class SlotMachine
 
         if(pos <= 0 || wheels.isEmpty()){
             pos = 0;
-        }else if (pos > wheels.size()){
+        }else if (pos >= wheels.size()){
             pos = wheels.size() - 1;
             // revisar ese - 1
         }
