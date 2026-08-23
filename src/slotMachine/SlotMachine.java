@@ -171,7 +171,7 @@ public class SlotMachine
     public void spin(int wheel){
         ok = false;
         if (wheels.isEmpty() || symbols.isEmpty()){
-            messageForUser("No se puede girar porque no hay ruedas.");
+            messageForUser("No se puede girar.");
             return;
         }
         
@@ -336,7 +336,7 @@ public class SlotMachine
                 return false;
             }
         }
-        psm.reDrawWin();
+        if(isVisible) psm.reDrawWin();
         ok = true;
         return true;
     }
