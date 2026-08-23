@@ -2,7 +2,8 @@ package slotMachine;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 /**
- * Write a description of class SlotMachine here.
+ * A slot machine where you can configure symbols and wheels, and also spin and know if 
+ * it is a jackpot.
  * 
  * @author (your name) 
  * @version (a version number or a date)
@@ -15,6 +16,9 @@ public class SlotMachine
     private boolean isVisible;
     private boolean ok; 
 
+    /**
+     * Create a new slotMachine and the needed ArrayList for it.
+     */
     public SlotMachine(){
         wheels = new ArrayList<>();
         symbols = new ArrayList<>();
@@ -23,25 +27,37 @@ public class SlotMachine
     }
 
     // Revisado
+    /**
+     * Add a wheel to the slot machine in a specific position. 
+     */
     public void addWheel(int pos){
         ok = false;
+        
+        if (pos > wheels.size() && !wheels.isEmpty()){
+            pos = normalizePosWheel(pos);
+            pos ++;
+        } 
+        else{
         pos = normalizePosWheel(pos);
-
+        }
         Wheel wh = new Wheel();
         wheels.add(pos, wh);
-
+        
         if(isVisible) psm.reDraw();
         ok = true;
     }
 
     // Revisado
+    /**
+     * Delete a wheel at a specific position
+     */
     public void delWheel(int pos){
         ok = false;
         if(wheels.isEmpty()){
             messageForUser("No puedes eliminar una rueda porque aún no creas ninguna.");
             return;
         }
-
+        
         pos = normalizePosWheel(pos);
         wheels.remove(pos);
         if(isVisible) psm.reDraw();
@@ -50,24 +66,37 @@ public class SlotMachine
     }
 
     // Revisado
+    /**
+     * Add a symbol in a specific position in order to be used later.
+     */
     public void addSymbol(int pos, String color){
         ok = false;
         if (existColor(color)) return; // Si el color ya habia sido agreado no hace nada
-
+ 
         pos = normalizePosSym(pos);
         Symbol sym = new Symbol(color);
         symbols.add(pos, sym);
 
-        // Se actulizan los indices de las ruedas que se vieron afectadas por el nuevo simbolo
+        /*// Se actulizan los indices de las ruedas que se vieron afectadas por el nuevo simbolo
         for (int i = pos+1; i < wheels.size(); i++) {
             Wheel wh = wheels.get(i);
             wh.setSymbIndex(i+1); // BUG es el indice incorrecto
-        }
+        }*/
 
+        for (int i = 0; i < wheels.size(); i++){
+            Wheel wh = wheels.get(i);
+            
+            if (wh.getSymbIndex() >= pos){
+                wh.setSymbIndex(wh.getSymbIndex() + 1);
+            }
+        }
         ok = true;
     }
 
     // revisado
+    /**
+     * Delete a symbol previously added.
+     */
     public void delSymbol(String symbol){
         ok = false;
         if(symbols.isEmpty()){
@@ -93,6 +122,9 @@ public class SlotMachine
     }
 
     // revisado
+    /**
+     * Place a symbol in a specific wheel.
+     */
     public void placeSymbol(int wheel, String symbol){
         if(wheels.isEmpty() || symbols.isEmpty()){
             messageForUser("No se puede agregar un simbolo si no hay ruedas.");
@@ -128,6 +160,9 @@ public class SlotMachine
     }
 
     // 
+    /**
+     * Spin the symbol of a specific wheel on screen.
+     */
     public void spin(int wheel){
         ok = false;
         if (wheels.isEmpty() || symbols.isEmpty()){
@@ -157,6 +192,9 @@ public class SlotMachine
         ok = true;
     }
     
+    /**
+     * Spin all the symbols on screen.
+     */
     public void spin(){
         if(wheels.isEmpty() ){//|| symbols.isEmpty()
             messageForUser("No hay ruedas para girar.");
@@ -167,11 +205,14 @@ public class SlotMachine
             messageForUser("No hay simbolos.");
             return;
         }
-        for (int i = 1; i < wheels.size()+1; i++)  spin(i);
+        for (int i = 1; i <= wheels.size(); i++)  spin(i); //quité +1 porque fallaba con la ultima wheel
 
         ok = true;
     }
     
+    /**
+     * Return a list with the symbols that can be used.
+     */
     public String[] symbols(){
         ok = false;
         if (symbols.isEmpty()){
@@ -193,6 +234,9 @@ public class SlotMachine
         return listSymbols;
     }
     
+    /**
+     * Return the amount of different symbols on screen.
+     */
     public int distinctSymbols(){ //cantidad de simbolos distintos
         
         if (wheels.isEmpty()){
@@ -201,7 +245,7 @@ public class SlotMachine
             return 0;
         }
 
-        ArrayList <String> coloresSimbolos = new ArrayList<>();
+        ArrayList <String> colorOfSymbols = new ArrayList<>(); //cambio var espanol
         
         Symbol actualSymbol;
         String actualColor;
@@ -210,38 +254,45 @@ public class SlotMachine
             actualSymbol = wheels.get(i).getShownSymbol();
             actualColor = actualSymbol.getColor();
             
-            if(!coloresSimbolos.contains(actualColor)){
-                coloresSimbolos.add(actualColor);
+            if(!colorOfSymbols.contains(actualColor)){
+                colorOfSymbols.add(actualColor);
             }
         }
         
-        int totalDistinSymb = coloresSimbolos.size();
+        int totalDistinSymb = colorOfSymbols.size();
         ok = true;
         return totalDistinSymb;
     }
     
+    /**
+     * Return a list with the colors of the symbols on screen.
+     */
     public String[] configuration(){
         if (wheels.isEmpty()){
             messageForUser("No hay ruedas.");
             return new String[0];
         }
         
-        String [] elementosVisibles = new String[wheels.size()];
+        String [] visibleElements = new String[wheels.size()]; //var a espanol
         
         for (int i = 0; i < wheels.size(); i++){
             Wheel wh = wheels.get(i);
             Symbol simboloActual = wh.getShownSymbol();
             if(simboloActual == null) {
-                elementosVisibles[i] = null; //revisar si se deberia poner null o no
+                visibleElements[i] = null; //revisar si se deberia poner null o no
                 continue;
             }
             
-            elementosVisibles[i] = simboloActual.getColor();
+            visibleElements[i] = simboloActual.getColor();
         }
         ok = true;
-        return elementosVisibles;
+        return visibleElements;
     }
     
+    /**
+     * Show if all symbols on screen have the same color on screen and if it's true, 
+     * paint the machine as winner.
+     */
     public boolean isJackpot(){
         ok = false;
         if (wheels.isEmpty() || symbols.isEmpty()){
@@ -250,11 +301,16 @@ public class SlotMachine
             return false;
         }
         
-        Wheel wh;
+        Wheel wh; 
         wh = wheels.get(0);
         
         Symbol firstSymbol = wh.getShownSymbol();
         Symbol actualSymbol;
+        
+        if(firstSymbol == null){
+            ok = true;
+            return false;
+        }
         
         String firstColor = firstSymbol.getColor() ;
         String actualColor;
@@ -273,15 +329,22 @@ public class SlotMachine
                 return false;
             }
         }
+        psm.reDrawWin();
         ok = true;
         return true;
     }
     
+    /**
+     * Make the slot machine visible.
+     */
     public void makeVisible(){
         isVisible = true;
         psm.makeVisible();
     }
     
+    /**
+     * Make the slot machine invisible.
+     */
     public void makeInvisible(){
         psm.makeInvisible(); // falta esta logica :/
         isVisible = false;
@@ -291,6 +354,9 @@ public class SlotMachine
         
     }
     
+    /**
+     * Indicate if last operacion was succesful
+     */
     public boolean ok(){
         return ok;
     }
@@ -298,6 +364,9 @@ public class SlotMachine
 
 
     //devuelve la posicion real 
+    /**
+     * Adjust the position based on the zero-indexed standard.
+     */
     private int normalizePosSym(int pos){
         pos--;  //1 --> 0
 
@@ -311,6 +380,9 @@ public class SlotMachine
         return pos;
     }
     
+    /**
+     * Adjust the position based on the zero-indexed standard.
+     */
     private int normalizePosWheel(int pos){ 
         pos--; // 1 --> 0 
 
@@ -320,17 +392,23 @@ public class SlotMachine
         else if (pos >= wheels.size()){
             pos = wheels.size() - 1;
             // revisar ese - 1
-            //era sin el -1 porque si se deja no podemos poner una wheel al final
+            //era con el -1 porque si se deja no podemos poner una wheel al final
         }
         return pos;
     }
 
+    /**
+     * Show different messages on screen.
+     */
     private void messageForUser(String ms){
         if(isVisible)
             JOptionPane.showMessageDialog(null, ms);
     }
 
     // Verifica si el simbolo ya existe el alista de symbols
+    /**
+     * Verify if a symbol already exists.
+     */
     private boolean existColor(String symbol){
         for (Symbol s : symbols) {
             if(symbol.equals(s.getColor()))
@@ -339,6 +417,7 @@ public class SlotMachine
         return false;
     }
 
+    
     public  ArrayList<Symbol> getSymbols(){
         return symbols;
     }

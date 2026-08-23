@@ -41,7 +41,7 @@ public class prueba
         }
         //machine.delSymbol(2);
 
-        for(Wheel wh : machine.getWheels()){
+        for(Wheel wh : machine.getWheels()){ 
             System.out.println("colorWh2: "+wh.getShownSymbol().getColor());
         }
         machine.makeVisible();
