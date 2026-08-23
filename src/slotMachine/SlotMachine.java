@@ -26,7 +26,6 @@ public class SlotMachine
         ok = true;
     }
 
-    // Revisado
     /**
      * Add a wheel to the slot machine in a specific position. 
      */
@@ -47,7 +46,6 @@ public class SlotMachine
         ok = true;
     }
 
-    // Revisado
     /**
      * Delete a wheel at a specific position
      */
@@ -65,24 +63,17 @@ public class SlotMachine
         ok = true;
     }
 
-    // Revisado
     /**
      * Add a symbol in a specific position in order to be used later.
      */
     public void addSymbol(int pos, String color){
         ok = false;
-        if (existColor(color)) return; // Si el color ya habia sido agreado no hace nada
+        if (existColor(color)) return; 
 
         pos = normalizePosSym(pos);
         Symbol sym = new Symbol(color);
         symbols.add(pos, sym);
-
-        /*// Se actulizan los indices de las ruedas que se vieron afectadas por el nuevo simbolo
-        for (int i = pos+1; i < wheels.size(); i++) {
-            Wheel wh = wheels.get(i);
-            wh.setSymbIndex(i+1); // BUG es el indice incorrecto
-        }*/
-
+        
         for (int i = 0; i < wheels.size(); i++){
             Wheel wh = wheels.get(i);
             
@@ -93,7 +84,6 @@ public class SlotMachine
         ok = true;
     }
 
-    // revisado
     /**
      * Delete a symbol previously added.
      */
@@ -104,7 +94,7 @@ public class SlotMachine
             return;
         }
 
-        if(!existColor(symbol)) return; // Si el color no existe, no hay nada que borrar
+        if(!existColor(symbol)) return; 
         
         int deletedPos = 0;
         for (int i = 0; i < symbols.size(); i++) {
@@ -125,7 +115,6 @@ public class SlotMachine
         ok = true;
     }
 
-    // revisado
     /**
      * Place a symbol in a specific wheel.
      */
@@ -140,7 +129,6 @@ public class SlotMachine
         
         Symbol symb = null;
         int i = 0;
-        // Si el color existe guarda el indice y el simbolo para asignarlo
         
         for (Symbol s : symbols) {
             if(symbol.equals(s.getColor())){
@@ -150,12 +138,10 @@ public class SlotMachine
             i++;
         }
         
-        
-        // si el simbolo existe entonces actuliza la rueda correspondiente
         if(symb != null){
             Wheel wh = wheels.get(wheel);
-            wh.placeSymbol(i, new Symbol(symb)); // Linea dificil de explicar
-            if(isVisible) psm.reDrawSymbols(); //antes era reDraw
+            wh.placeSymbol(i, new Symbol(symb)); 
+            if(isVisible) psm.reDrawSymbols();
         }else{
             messageForUser("El simbolo que desea asignar no existe");
             return;
@@ -164,7 +150,6 @@ public class SlotMachine
         ok = true;
     }
 
-    // 
     /**
      * Spin the symbol of a specific wheel on screen.
      */
@@ -202,16 +187,15 @@ public class SlotMachine
      */
     public void spin(){
         ok = false;
-        if(wheels.isEmpty() ){//|| symbols.isEmpty()
+        if(wheels.isEmpty() ){
             messageForUser("No hay ruedas para girar.");
             return;
         }
-        //cambio**********************************************
         if(symbols.isEmpty()) {
             messageForUser("No hay simbolos.");
             return;
         }
-        for (int i = 1; i <= wheels.size(); i++)  spin(i); //quité +1 porque fallaba con la ultima wheel
+        for (int i = 1; i <= wheels.size(); i++)  spin(i); 
 
         ok = true;
     }
@@ -243,7 +227,7 @@ public class SlotMachine
     /**
      * Return the amount of different symbols on screen.
      */
-    public int distinctSymbols(){ //cantidad de simbolos distintos
+    public int distinctSymbols(){ 
         
         if (wheels.isEmpty()){
             messageForUser("No hay ruedas.");
@@ -286,7 +270,7 @@ public class SlotMachine
             Wheel wh = wheels.get(i);
             Symbol simboloActual = wh.getShownSymbol();
             if(simboloActual == null) {
-                visibleElements[i] = null; //revisar si se deberia poner null o no
+                visibleElements[i] = null; 
                 continue;
             }
             
@@ -353,7 +337,7 @@ public class SlotMachine
      * Make the slot machine invisible.
      */
     public void makeInvisible(){
-        psm.makeInvisible(); // falta esta logica :/
+        psm.makeInvisible(); 
         isVisible = false;
     }
     
@@ -367,10 +351,7 @@ public class SlotMachine
     public boolean ok(){
         return ok;
     }
-
-
-
-    //devuelve la posicion real 
+    
     /**
      * Adjust the position based on the zero-indexed standard.
      */
@@ -382,7 +363,6 @@ public class SlotMachine
         }
         else if (pos > symbols.size()){
             pos = symbols.size();
-            // revisar si falta -1
         }
         return pos;
     }
@@ -398,8 +378,6 @@ public class SlotMachine
         }
         else if (pos >= wheels.size()){
             pos = wheels.size() - 1;
-            // revisar ese - 1
-            //era con el -1 porque si se deja no podemos poner una wheel al final
         }
         return pos;
     }
@@ -413,7 +391,6 @@ public class SlotMachine
         }
     }
 
-    // Verifica si el simbolo ya existe el alista de symbols
     /**
      * Verify if a symbol already exists.
      */
@@ -425,7 +402,6 @@ public class SlotMachine
         return false;
     }
 
-    
     public  ArrayList<Symbol> getSymbols(){
         return symbols;
     }
