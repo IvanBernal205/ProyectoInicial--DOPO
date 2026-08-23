@@ -2,10 +2,12 @@ package slotMachine;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 /**
- * Write a description of class SlotMachine here.
+ * A slot machine where you can configure symbols and wheels, and also spin and know if 
+ * it is a jackpot.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Iván Andres Bernal Sabogal
+ * @author César Santiago Malaver Garnica
+ * @version 23/08/2026
  */
 public class SlotMachine
 {
@@ -15,6 +17,9 @@ public class SlotMachine
     private boolean isVisible;
     private boolean ok; 
 
+    /**
+     * Create a new slotMachine and the needed ArrayList for it.
+     */
     public SlotMachine(){
         wheels = new ArrayList<>();
         symbols = new ArrayList<>();
@@ -22,26 +27,38 @@ public class SlotMachine
         ok = true;
     }
 
-    // Revisado
+    /**
+     * Add a wheel to the slot machine in a specific position. 
+     * @param pos The position where the wheel will be added.
+     */
     public void addWheel(int pos){
         ok = false;
+        
+        if (pos > wheels.size() && !wheels.isEmpty()){
+            pos = normalizePosWheel(pos);
+            pos ++;
+        } 
+        else{
         pos = normalizePosWheel(pos);
-
+        }
         Wheel wh = new Wheel();
         wheels.add(pos, wh);
-
+        
         if(isVisible) psm.reDraw();
         ok = true;
     }
 
-    // Revisado
+    /**
+     * Delete a wheel at a specific position
+     * @param pos The position of the wheel you want to delete
+     */
     public void delWheel(int pos){
         ok = false;
         if(wheels.isEmpty()){
             messageForUser("No puedes eliminar una rueda porque aún no creas ninguna.");
             return;
         }
-
+        
         pos = normalizePosWheel(pos);
         wheels.remove(pos);
         if(isVisible) psm.reDraw();
@@ -49,25 +66,33 @@ public class SlotMachine
         ok = true;
     }
 
-    // Revisado
+    /**
+     * Add a symbol in a specific position in order to be used later.
+     * @param pos The position where you want to add the symbol
+     * @param color The color of the symbol
+     */
     public void addSymbol(int pos, String color){
         ok = false;
-        if (existColor(color)) return; // Si el color ya habia sido agreado no hace nada
+        if (existColor(color)) return; 
 
         pos = normalizePosSym(pos);
         Symbol sym = new Symbol(color);
         symbols.add(pos, sym);
-
-        // Se actulizan los indices de las ruedas que se vieron afectadas por el nuevo simbolo
-        for (int i = pos+1; i < wheels.size(); i++) {
+        
+        for (int i = 0; i < wheels.size(); i++){
             Wheel wh = wheels.get(i);
-            wh.setSymbIndex(i+1); // BUG es el indice incorrecto
+            
+            if (wh.getSymbIndex() >= pos){
+                wh.setSymbIndex(wh.getSymbIndex() + 1);
+            }
         }
-
         ok = true;
     }
 
-    // revisado
+    /**
+     * Delete a symbol previously added.
+     * @param symbol The color of the symbol you want to delete
+     */
     public void delSymbol(String symbol){
         ok = false;
         if(symbols.isEmpty()){
@@ -75,11 +100,13 @@ public class SlotMachine
             return;
         }
 
-        if(!existColor(symbol)) return; // Si el color no existe, no hay nada que borrar
+        if(!existColor(symbol)) return; 
         
-        for (Symbol s : symbols) {
-            if(symbol.equals(s.getColor())){
-                symbols.remove(s);
+        int deletedPos = 0;
+        for (int i = 0; i < symbols.size(); i++) {
+            if(symbol.equals(symbols.get(i).getColor())){
+                deletedPos = i;
+                symbols.remove(i);
                 break;
             }
         }
@@ -87,13 +114,20 @@ public class SlotMachine
         for (Wheel wh : wheels) {
             // si el simbolo eliminado esta siendo mostrado por alguna
             // rueda entonces se debe actulizar a otro simbolo
-            wh.symbolStillExist(symbol, symbols, isVisible);
+            wh.symbolStillExist(symbol, symbols, deletedPos, isVisible);
         }
+
+        if(isVisible) psm.reDrawSymbols();
         ok = true;
     }
 
-    // revisado
+    /**
+     * Place a symbol in a specific wheel.
+     * @param wheel The position of the wheel where you want to locate a symbol
+     * @param symbol The color of the symbol you want to place
+     */
     public void placeSymbol(int wheel, String symbol){
+        ok = false;
         if(wheels.isEmpty() || symbols.isEmpty()){
             messageForUser("No se puede agregar un simbolo si no hay ruedas.");
             return;
@@ -103,7 +137,6 @@ public class SlotMachine
         
         Symbol symb = null;
         int i = 0;
-        // Si el color existe guarda el indice y el simbolo para asignarlo
         
         for (Symbol s : symbols) {
             if(symbol.equals(s.getColor())){
@@ -113,12 +146,10 @@ public class SlotMachine
             i++;
         }
         
-        
-        // si el simbolo existe entonces actuliza la rueda correspondiente
         if(symb != null){
             Wheel wh = wheels.get(wheel);
-            wh.placeSymbol(i, new Symbol(symb)); // Linea dificil de explicar
-            if(isVisible) psm.reDrawSymbols(); //antes era reDraw
+            wh.placeSymbol(i, new Symbol(symb)); 
+            if(isVisible) psm.reDrawSymbols();
         }else{
             messageForUser("El simbolo que desea asignar no existe");
             return;
@@ -127,11 +158,14 @@ public class SlotMachine
         ok = true;
     }
 
-    // 
+    /**
+     * Spin the symbol of a specific wheel on screen.
+     * @param wheel The position of the wheel you want to spin
+     */
     public void spin(int wheel){
         ok = false;
         if (wheels.isEmpty() || symbols.isEmpty()){
-            messageForUser("No se puede girar porque no hay ruedas.");
+            messageForUser("No se puede girar.");
             return;
         }
         
@@ -157,21 +191,28 @@ public class SlotMachine
         ok = true;
     }
     
+    /**
+     * Spin all the symbols on screen.
+     */
     public void spin(){
-        if(wheels.isEmpty() ){//|| symbols.isEmpty()
+        ok = false;
+        if(wheels.isEmpty() ){
             messageForUser("No hay ruedas para girar.");
             return;
         }
-        //cambio**********************************************
         if(symbols.isEmpty()) {
             messageForUser("No hay simbolos.");
             return;
         }
-        for (int i = 1; i < wheels.size()+1; i++)  spin(i);
+        for (int i = 1; i <= wheels.size(); i++)  spin(i); 
 
         ok = true;
     }
     
+    /**
+     * Return a list with the symbols that can be used.
+     * @return List of symbols that can be used.
+     */
     public String[] symbols(){
         ok = false;
         if (symbols.isEmpty()){
@@ -193,7 +234,11 @@ public class SlotMachine
         return listSymbols;
     }
     
-    public int distinctSymbols(){ //cantidad de simbolos distintos
+    /**
+     * Return the amount of different symbols on screen.
+     * @return Number of different symbols on screen
+     */
+    public int distinctSymbols(){ 
         
         if (wheels.isEmpty()){
             messageForUser("No hay ruedas.");
@@ -201,47 +246,57 @@ public class SlotMachine
             return 0;
         }
 
-        ArrayList <String> coloresSimbolos = new ArrayList<>();
+        ArrayList <String> colorOfSymbols = new ArrayList<>(); 
         
         Symbol actualSymbol;
         String actualColor;
         
         for (int i = 0; i < wheels.size(); i ++){
             actualSymbol = wheels.get(i).getShownSymbol();
+            if(actualSymbol == null) continue;
             actualColor = actualSymbol.getColor();
             
-            if(!coloresSimbolos.contains(actualColor)){
-                coloresSimbolos.add(actualColor);
+            if(!colorOfSymbols.contains(actualColor)){
+                colorOfSymbols.add(actualColor);
             }
         }
         
-        int totalDistinSymb = coloresSimbolos.size();
+        int totalDistinSymb = colorOfSymbols.size();
         ok = true;
         return totalDistinSymb;
     }
     
+    /**
+     * Return a list with the colors of the symbols on screen.
+     * @return List of the symbols on screen.
+     */
     public String[] configuration(){
         if (wheels.isEmpty()){
             messageForUser("No hay ruedas.");
             return new String[0];
         }
         
-        String [] elementosVisibles = new String[wheels.size()];
+        String [] visibleElements = new String[wheels.size()]; 
         
         for (int i = 0; i < wheels.size(); i++){
             Wheel wh = wheels.get(i);
             Symbol simboloActual = wh.getShownSymbol();
             if(simboloActual == null) {
-                elementosVisibles[i] = null; //revisar si se deberia poner null o no
+                visibleElements[i] = null; 
                 continue;
             }
             
-            elementosVisibles[i] = simboloActual.getColor();
+            visibleElements[i] = simboloActual.getColor();
         }
         ok = true;
-        return elementosVisibles;
+        return visibleElements;
     }
     
+    /**
+     * Show if all symbols on screen have the same color on screen and if it's true, 
+     * paint the machine as winner.
+     * @return true if all the symbols on screen are equal, false otherwise
+     */
     public boolean isJackpot(){
         ok = false;
         if (wheels.isEmpty() || symbols.isEmpty()){
@@ -250,11 +305,16 @@ public class SlotMachine
             return false;
         }
         
-        Wheel wh;
+        Wheel wh; 
         wh = wheels.get(0);
         
         Symbol firstSymbol = wh.getShownSymbol();
         Symbol actualSymbol;
+        
+        if(firstSymbol == null){
+            ok = true;
+            return false;
+        }
         
         String firstColor = firstSymbol.getColor() ;
         String actualColor;
@@ -273,31 +333,47 @@ public class SlotMachine
                 return false;
             }
         }
+        if(isVisible) psm.reDrawWin();
         ok = true;
         return true;
     }
     
+    /**
+     * Make the slot machine visible.
+     */
     public void makeVisible(){
         isVisible = true;
         psm.makeVisible();
     }
     
+    /**
+     * Make the slot machine invisible.
+     */
     public void makeInvisible(){
-        psm.makeInvisible(); // falta esta logica :/
+        psm.makeInvisible(); 
         isVisible = false;
     }
     
     public void exit(){
-        
+        if (isVisible){
+            makeInvisible();
+        }
+        System.exit(0);
     }
     
+    /**
+     * Indicate if last operacion was succesful
+     * @return true if the last operation was succesful, false otherwise
+     */
     public boolean ok(){
         return ok;
     }
-
-
-
-    //devuelve la posicion real 
+    
+    /**
+     * Adjust the position based on the zero-indexed standard.
+     * @param pos The position that you want to normalize
+     * @return The position but now it's normalized
+     */
     private int normalizePosSym(int pos){
         pos--;  //1 --> 0
 
@@ -306,11 +382,15 @@ public class SlotMachine
         }
         else if (pos > symbols.size()){
             pos = symbols.size();
-            // revisar si falta -1
         }
         return pos;
     }
     
+    /**
+     * Adjust the position based on the zero-indexed standard.
+     * @param pos The position that you want to normalize
+     * @return The position but now it's normalized
+     */
     private int normalizePosWheel(int pos){ 
         pos--; // 1 --> 0 
 
@@ -319,18 +399,25 @@ public class SlotMachine
         }
         else if (pos >= wheels.size()){
             pos = wheels.size() - 1;
-            // revisar ese - 1
-            //era sin el -1 porque si se deja no podemos poner una wheel al final
         }
         return pos;
     }
 
+    /**
+     * Show different messages on screen.
+     * @param ms The message you want to show on screen
+     */
     private void messageForUser(String ms){
-        if(isVisible)
+        if(isVisible){
             JOptionPane.showMessageDialog(null, ms);
+        }
     }
 
-    // Verifica si el simbolo ya existe el alista de symbols
+    /**
+     * Verify if a symbol already exists.
+     * @param symbol The symbol you want to confirm if exists
+     * @return true if the color already exists, false if the color does not exist
+     */
     private boolean existColor(String symbol){
         for (Symbol s : symbols) {
             if(symbol.equals(s.getColor()))

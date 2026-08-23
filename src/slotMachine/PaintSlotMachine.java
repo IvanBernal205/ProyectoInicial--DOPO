@@ -1,10 +1,15 @@
 package slotMachine;
-
 import java.util.ArrayList;
-
 import shapes.Circle;
 import shapes.Rectangle;
 
+/**
+ * A slot Machine which will be the main element.
+ * 
+ * @author Iván Andres Bernal Sabogal
+ * @author César Santiago Malaver Garnica
+ * @version 23/08/2026
+ */
 public class PaintSlotMachine {
 
     private static final int TILE = 60;
@@ -23,6 +28,10 @@ public class PaintSlotMachine {
     
     private Rectangle actualRect;
 
+    /**
+     * Paint a default slot machine.
+     * @param wheels An array with the wheels already created
+     */
     public PaintSlotMachine(ArrayList<Wheel> wheels){
         this.wheels = wheels;
     }
@@ -34,17 +43,28 @@ public class PaintSlotMachine {
         // paintSymbols();
     }
 
+    /**
+     * Make visible every instance used to create the slot machine and
+     * the recent symbols on screen.
+     */
     public void makeVisible(){
         visible = true;
         paintMachine();
         reDraw();
     }
 
+    /**
+     * Make invisible every instance used to create the slot machine and
+     * the recent symbols on screen.
+     */
     public void makeInvisible(){
         visible = false;
         eraseMachine();
     }
 
+    /**
+     * Draw the elements of the slot machine
+     */
     public void reDraw(){
         for (Rectangle r : bars) r.makeInvisible();
         for (Circle c : circ) c.makeInvisible();
@@ -61,6 +81,9 @@ public class PaintSlotMachine {
         }
     }
     
+    /**
+     * Draw the recent symbols on the slot machine.
+     */
     public void reDrawSymbols(){
         for (Circle c: circ) c.makeInvisible();
         circ.clear();
@@ -71,7 +94,12 @@ public class PaintSlotMachine {
         }
     }
 
+    /**
+     * Paint the slot machine broders and lever
+     */
     private void paintMachine(){
+        for (Rectangle r : machineRecs) r.makeInvisible();
+        machineRecs.clear();
         for (int i = 0; i < HEIGHT_CANVAS; i++) {
             for (int j = 0; j < WIDTH_CANVAS; j++) {
 
@@ -88,6 +116,9 @@ public class PaintSlotMachine {
         paintLever();
     }
 
+    /**
+     * Paint the separation between a couple of wheels.
+     */
     private void paintWheels(){
         double numWh = wheels.size();
         double length = WIDTH_CANVAS - 5;
@@ -107,6 +138,9 @@ public class PaintSlotMachine {
         }
     }
 
+    /**
+     * Paint the symbols on screen.
+     */
     private void paintSymbols(){
         double numWh = wheels.size();
         double length = WIDTH_CANVAS - 5;
@@ -127,12 +161,18 @@ public class PaintSlotMachine {
         }
     }
 
+    /**
+     * Erase the symbols on screen.
+     */
     private void eraseSymbols(){
         for (int i = 0; i < circ.size(); i++){
             circ.get(i).makeInvisible();
         }
     }
     
+    /**
+     * Paint the lever on screen
+     */
     private void paintLever(){
         Rectangle rec = new Rectangle();
         rec.changeColor("black");
@@ -151,6 +191,7 @@ public class PaintSlotMachine {
         machineRecs.add(rec1); //Cambio Provisional
         //rectLever.add(rec1);
 
+        if (circLever != null) circLever.makeInvisible();
         circLever = new Circle();
         circLever.changeColor("red");
         circLever.changeSize(40);
@@ -159,6 +200,9 @@ public class PaintSlotMachine {
         circLever.makeVisible(); //circle rojo de lever
     }
     
+    /**
+     * Erase the slot machine from the screen
+     */
     private void eraseMachine(){
         //if (!visible) return; //si ya es invisible, retorna
         for (int i = 0; i < bars.size(); i++){
@@ -170,12 +214,55 @@ public class PaintSlotMachine {
             actualRect.makeInvisible();
         }
         
-        circLever.makeInvisible(); //hace invisible el circulo rojo
+        if (circLever != null) circLever.makeInvisible(); //hace invisible el circulo rojo
         eraseSymbols(); //hace invisible los simbolos
         
         for (int i = 0; i < bars.size(); i++){
             bars.get(i).makeInvisible(); //hace invisibles las barritas divisoras de wheels.
         }
         visible = false;
+    }
+    
+    /**
+     * Paint a different style of slot machine if the user wins a jackpot
+     */
+    public void reDrawWin(){
+        paintWin();
+        for (Rectangle r : bars) r.makeInvisible();
+        for (Circle c : circ) c.makeInvisible();
+        bars.clear(); 
+        circ.clear();
+
+        paintWheels();
+        paintSymbols();
+
+        if (visible){
+            for (Rectangle re : machineRecs) re.makeVisible();
+            for (Rectangle r : bars) r.makeVisible();
+            for (Circle c : circ) c.makeVisible();
+        }
+    }
+    
+    /**
+     * Paint a different style of slot machine if the user wins a jackpot
+     */
+    public void paintWin(){
+        for(Rectangle r: machineRecs) r.makeInvisible();
+        machineRecs.clear();
+        
+        for (int i = 0; i < HEIGHT_CANVAS; i++) {
+            for (int j = 0; j < WIDTH_CANVAS; j++) {
+
+                if(i == 0 || j == 0 || i == HEIGHT_CANVAS-1 || j == WIDTH_CANVAS-1 || j == WIDTH_CANVAS-2 || (i==2 && j!=1 && j!=WIDTH_CANVAS-3)){
+                    continue;
+                }
+                Rectangle rec = new Rectangle();
+                rec.changeColor("green");
+                rec.changeSize(TILE, TILE);
+                rec.changePosition(j*TILE,i*TILE);
+                machineRecs.add(rec);
+            }
+        }
+        paintLever();
     }
 }

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
-
+import javax.swing.JOptionPane;
 /**
  * Canvas is a class to allow for simple graphical drawing on a canvas.
  * This is a modification of the general purpose Canvas, specially made for
@@ -140,8 +140,7 @@ public class Canvas{
             graphic.setColor(new Color(171, 159, 32));
         else if (colorString.equals("purple"))
             graphic.setColor(new Color(119, 18, 153));
-        else
-            graphic.setColor(Color.pink);
+        else  graphic.setColor(Color.pink);
     }
 
     /**
