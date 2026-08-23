@@ -48,7 +48,7 @@ public class PaintSlotMachine {
     public void reDraw(){
         for (Rectangle r : bars) r.makeInvisible();
         for (Circle c : circ) c.makeInvisible();
-        bars.clear(); //en pruebas no afectan
+        bars.clear(); 
         circ.clear();
 
         paintWheels();
@@ -171,10 +171,10 @@ public class PaintSlotMachine {
         }
         
         circLever.makeInvisible(); //hace invisible el circulo rojo
-        eraseSymbols(); //elimina los simbolos
+        eraseSymbols(); //hace invisible los simbolos
         
         for (int i = 0; i < bars.size(); i++){
-            bars.get(i).makeInvisible();
+            bars.get(i).makeInvisible(); //hace invisibles las barritas divisoras de wheels.
         }
         visible = false;
     }

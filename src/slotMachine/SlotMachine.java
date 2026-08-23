@@ -299,25 +299,28 @@ public class SlotMachine
 
     //devuelve la posicion real 
     private int normalizePosSym(int pos){
-        pos--;
+        pos--;  //1 --> 0
 
         if(pos <= 0 || symbols.isEmpty()){
             pos = 0;
-        }else if (pos > symbols.size()){
+        }
+        else if (pos > symbols.size()){
             pos = symbols.size();
             // revisar si falta -1
         }
         return pos;
     }
     
-    private int normalizePosWheel(int pos){
-        pos--;
+    private int normalizePosWheel(int pos){ 
+        pos--; // 1 --> 0 
 
         if(pos <= 0 || wheels.isEmpty()){
             pos = 0;
-        }else if (pos >= wheels.size()){
+        }
+        else if (pos >= wheels.size()){
             pos = wheels.size() - 1;
             // revisar ese - 1
+            //era sin el -1 porque si se deja no podemos poner una wheel al final
         }
         return pos;
     }
