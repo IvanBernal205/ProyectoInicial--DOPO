@@ -72,7 +72,7 @@ public class SlotMachine
     public void addSymbol(int pos, String color){
         ok = false;
         if (existColor(color)) return; // Si el color ya habia sido agreado no hace nada
- 
+
         pos = normalizePosSym(pos);
         Symbol sym = new Symbol(color);
         symbols.add(pos, sym);
@@ -126,6 +126,7 @@ public class SlotMachine
      * Place a symbol in a specific wheel.
      */
     public void placeSymbol(int wheel, String symbol){
+        ok = false;
         if(wheels.isEmpty() || symbols.isEmpty()){
             messageForUser("No se puede agregar un simbolo si no hay ruedas.");
             return;
@@ -196,6 +197,7 @@ public class SlotMachine
      * Spin all the symbols on screen.
      */
     public void spin(){
+        ok = false;
         if(wheels.isEmpty() ){//|| symbols.isEmpty()
             messageForUser("No hay ruedas para girar.");
             return;
@@ -401,8 +403,9 @@ public class SlotMachine
      * Show different messages on screen.
      */
     private void messageForUser(String ms){
-        if(isVisible)
+        if(isVisible){
             JOptionPane.showMessageDialog(null, ms);
+        }
     }
 
     // Verifica si el simbolo ya existe el alista de symbols
