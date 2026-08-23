@@ -161,6 +161,10 @@ public class PaintSlotMachine {
     
     private void eraseMachine(){
         //if (!visible) return; //si ya es invisible, retorna
+        for (int i = 0; i < bars.size(); i++){
+            bars.get(i).makeInvisible();
+        }
+        
         for (int i = 0; i < machineRecs.size(); i++){ //para hacer invisible el contorno negro
             actualRect = machineRecs.get(i);
             actualRect.makeInvisible();
@@ -168,6 +172,10 @@ public class PaintSlotMachine {
         
         circLever.makeInvisible(); //hace invisible el circulo rojo
         eraseSymbols(); //elimina los simbolos
+        
+        for (int i = 0; i < bars.size(); i++){
+            bars.get(i).makeInvisible();
+        }
         visible = false;
     }
 }
