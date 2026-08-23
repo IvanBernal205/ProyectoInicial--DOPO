@@ -21,14 +21,25 @@ public class Wheel {
     /**
      * 
      */
-    public void symbolStillExist(String color,  ArrayList<Symbol> symbols, boolean isVisible){
+    public void symbolStillExist(String color,  ArrayList<Symbol> symbols, int deletedPos, boolean isVisible){
+        if(shownSymbol == null) return;
+
         if(shownSymbol.getColor().equals(color)){
-            Symbol newSymbol = symbols.get(symbIndex);
-            shownSymbol = new Symbol(newSymbol);
-            
+            if(symbols.isEmpty()){
+                symbIndex = null;
+                shownSymbol = null;
+            }
+            else{
+                int newIndex = deletedPos % symbols.size();
+                placeSymbol(newIndex, new Symbol(symbols.get(newIndex)));
+            }
+
             if(isVisible){
                 // posible accion para actualizar el canvas
             }
+        }
+        else if(symbIndex != null && symbIndex > deletedPos){
+            symbIndex = symbIndex - 1;
         }
     }
 

@@ -106,9 +106,11 @@ public class SlotMachine
 
         if(!existColor(symbol)) return; // Si el color no existe, no hay nada que borrar
         
-        for (Symbol s : symbols) {
-            if(symbol.equals(s.getColor())){
-                symbols.remove(s);
+        int deletedPos = 0;
+        for (int i = 0; i < symbols.size(); i++) {
+            if(symbol.equals(symbols.get(i).getColor())){
+                deletedPos = i;
+                symbols.remove(i);
                 break;
             }
         }
@@ -116,8 +118,10 @@ public class SlotMachine
         for (Wheel wh : wheels) {
             // si el simbolo eliminado esta siendo mostrado por alguna
             // rueda entonces se debe actulizar a otro simbolo
-            wh.symbolStillExist(symbol, symbols, isVisible);
+            wh.symbolStillExist(symbol, symbols, deletedPos, isVisible);
         }
+
+        if(isVisible) psm.reDrawSymbols();
         ok = true;
     }
 
@@ -254,6 +258,7 @@ public class SlotMachine
         
         for (int i = 0; i < wheels.size(); i ++){
             actualSymbol = wheels.get(i).getShownSymbol();
+            if(actualSymbol == null) continue;
             actualColor = actualSymbol.getColor();
             
             if(!colorOfSymbols.contains(actualColor)){
