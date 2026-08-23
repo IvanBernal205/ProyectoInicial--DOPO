@@ -104,6 +104,7 @@ public class SlotMachine
         Symbol symb = null;
         int i = 0;
         // Si el color existe guarda el indice y el simbolo para asignarlo
+        
         for (Symbol s : symbols) {
             if(symbol.equals(s.getColor())){
                 symb = s;
@@ -111,12 +112,13 @@ public class SlotMachine
             }
             i++;
         }
-
+        
+        
         // si el simbolo existe entonces actuliza la rueda correspondiente
         if(symb != null){
             Wheel wh = wheels.get(wheel);
             wh.placeSymbol(i, new Symbol(symb)); // Linea dificil de explicar
-            if(isVisible) psm.reDraw();
+            if(isVisible) psm.reDrawSymbols(); //antes era reDraw
         }else{
             messageForUser("El simbolo que desea asignar no existe");
             return;
@@ -150,17 +152,21 @@ public class SlotMachine
         
         if(isVisible){
             // Cuando se usa spin() se repinta cada qe una rueda gira y se ve raro.
-            psm.reDraw();
+            psm.reDrawSymbols(); //estaba sin el Symbols del final
         }
         ok = true;
     }
     
     public void spin(){
-        if(wheels.isEmpty() || symbols.isEmpty()){
+        if(wheels.isEmpty() ){//|| symbols.isEmpty()
             messageForUser("No hay ruedas para girar.");
             return;
         }
-        
+        //cambio**********************************************
+        if(symbols.isEmpty()) {
+            messageForUser("No hay simbolos.");
+            return;
+        }
         for (int i = 1; i < wheels.size()+1; i++)  spin(i);
 
         ok = true;
@@ -278,6 +284,7 @@ public class SlotMachine
     
     public void makeInvisible(){
         psm.makeInvisible(); // falta esta logica :/
+        isVisible = false;
     }
     
     public void exit(){
@@ -287,9 +294,6 @@ public class SlotMachine
     public boolean ok(){
         return ok;
     }
-
-
-
 
 
 
@@ -331,8 +335,6 @@ public class SlotMachine
         }
         return false;
     }
-
-
 
     public  ArrayList<Symbol> getSymbols(){
         return symbols;

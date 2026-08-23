@@ -15,7 +15,13 @@ public class PaintSlotMachine {
 
     private ArrayList<Rectangle> machineRecs = new ArrayList<Rectangle>();
     private ArrayList<Rectangle> bars = new ArrayList<>();
-    private ArrayList<Circle> circ = new ArrayList<Circle>();   
+    private ArrayList<Circle> circ = new ArrayList<Circle>();  //aqui se guardan los symbols
+    
+    private Circle circLever; 
+    //private ArrayList<Rectangle> rectLever = new ArrayList<Rectangle>();
+    //private ArrayList<Circle> circLever = new ArrayList<Circle>();
+    
+    private Rectangle actualRect;
 
     public PaintSlotMachine(ArrayList<Wheel> wheels){
         this.wheels = wheels;
@@ -36,13 +42,13 @@ public class PaintSlotMachine {
 
     public void makeInvisible(){
         visible = false;
-        reDraw();
+        eraseMachine();
     }
 
     public void reDraw(){
         for (Rectangle r : bars) r.makeInvisible();
         for (Circle c : circ) c.makeInvisible();
-        bars.clear();
+        bars.clear(); //en pruebas no afectan
         circ.clear();
 
         paintWheels();
@@ -54,8 +60,16 @@ public class PaintSlotMachine {
             for (Circle c : circ) c.makeVisible();
         }
     }
-
-
+    
+    public void reDrawSymbols(){
+        for (Circle c: circ) c.makeInvisible();
+        circ.clear();
+        paintSymbols();
+        
+        if(visible){
+            for(Circle c:circ) c.makeVisible();
+        }
+    }
 
     private void paintMachine(){
         for (int i = 0; i < HEIGHT_CANVAS; i++) {
@@ -72,16 +86,16 @@ public class PaintSlotMachine {
             }
         }
         paintLever();
-}
+    }
 
     private void paintWheels(){
         double numWh = wheels.size();
         double length = WIDTH_CANVAS - 5;
         double lenSection = length/numWh;
 
-        for (int i = 1; i < numWh; i++) {
+        for (int i = 1; i < numWh; i++) { 
             Rectangle rec = new Rectangle();
-            rec.changeColor("black");
+            rec.changeColor("black"); //lineas delgadas
             rec.changeSize(TILE, 2);
 
 
@@ -98,7 +112,6 @@ public class PaintSlotMachine {
         double length = WIDTH_CANVAS - 5;
         double lenSection = length/numWh;
         
-
         for (int i = 0; i < numWh; i++) {
             Symbol symb = wheels.get(i).getShownSymbol();
             if (symb == null || symb.getShape() == null) continue;
@@ -106,37 +119,55 @@ public class PaintSlotMachine {
             cir.changeColor(symb.getColor());
             cir.changeSize(40);
 
-
             double x =  (2 + lenSection*i)*TILE + ((lenSection*TILE) - 40)/2;
             int xFinal = (int) x;
 
-
-
-
-
             cir.changePosition(xFinal, 2*TILE + 10);
-            circ.add(cir);
+            circ.add(cir); 
         }
     }
 
+    private void eraseSymbols(){
+        for (int i = 0; i < circ.size(); i++){
+            circ.get(i).makeInvisible();
+        }
+    }
+    
     private void paintLever(){
         Rectangle rec = new Rectangle();
         rec.changeColor("black");
         rec.changeSize(10, 60);
         rec.changePosition(21*TILE,3*TILE);
+        //rec.makeVisible();
         machineRecs.add(rec);
+        //rectLever.add(rec);
 
         Rectangle rec1 = new Rectangle();
         rec1.changeColor("black");
         rec1.changeSize(70, 10);
         rec1.changePosition(22*TILE,2*TILE);
-        machineRecs.add(rec1);
+        //
+        //rec1.makeVisible();
+        machineRecs.add(rec1); //Cambio Provisional
+        //rectLever.add(rec1);
 
-        Circle cir = new Circle();
-        cir.changeColor("red");
-        cir.changeSize(40);
-        cir.changePosition(21*TILE+45,1*TILE+20);
+        circLever = new Circle();
+        circLever.changeColor("red");
+        circLever.changeSize(40);
+        circLever.changePosition(21*TILE+45,1*TILE+20);
         //circ.add(cir);
-        cir.makeVisible();
+        circLever.makeVisible(); //circle rojo de lever
+    }
+    
+    private void eraseMachine(){
+        //if (!visible) return; //si ya es invisible, retorna
+        for (int i = 0; i < machineRecs.size(); i++){ //para hacer invisible el contorno negro
+            actualRect = machineRecs.get(i);
+            actualRect.makeInvisible();
+        }
+        
+        circLever.makeInvisible(); //hace invisible el circulo rojo
+        eraseSymbols(); //elimina los simbolos
+        visible = false;
     }
 }
