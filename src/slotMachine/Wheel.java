@@ -33,10 +33,6 @@ public class Wheel {
                 int newIndex = deletedPos % symbols.size();
                 placeSymbol(newIndex, new Symbol(symbols.get(newIndex)));
             }
-
-            if(isVisible){
-                // posible accion para actualizar el canvas
-            }
         }
         else if(symbIndex != null && symbIndex > deletedPos){
             symbIndex = symbIndex - 1;

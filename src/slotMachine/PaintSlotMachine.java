@@ -93,6 +93,8 @@ public class PaintSlotMachine {
      * Paint the slot machine broders and lever
      */
     private void paintMachine(){
+        for (Rectangle r : machineRecs) r.makeInvisible();
+        machineRecs.clear();
         for (int i = 0; i < HEIGHT_CANVAS; i++) {
             for (int j = 0; j < WIDTH_CANVAS; j++) {
 
@@ -184,6 +186,7 @@ public class PaintSlotMachine {
         machineRecs.add(rec1); //Cambio Provisional
         //rectLever.add(rec1);
 
+        if (circLever != null) circLever.makeInvisible();
         circLever = new Circle();
         circLever.changeColor("red");
         circLever.changeSize(40);
@@ -206,7 +209,7 @@ public class PaintSlotMachine {
             actualRect.makeInvisible();
         }
         
-        circLever.makeInvisible(); //hace invisible el circulo rojo
+        if (circLever != null) circLever.makeInvisible(); //hace invisible el circulo rojo
         eraseSymbols(); //hace invisible los simbolos
         
         for (int i = 0; i < bars.size(); i++){
