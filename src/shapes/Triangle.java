@@ -167,7 +167,7 @@ public class Triangle{
             int[] xpoints = { xPosition, xPosition + (width/2), xPosition - (width/2) };
             int[] ypoints = { yPosition, yPosition + height, yPosition + height };
             canvas.draw(this, color, new Polygon(xpoints, ypoints, 3));
-            canvas.wait(10);
+            canvas.wait(5);
         }
     }
 
@@ -179,5 +179,16 @@ public class Triangle{
             Canvas canvas = Canvas.getCanvas();
             canvas.erase(this);
         }
+    }
+
+    /**
+     * Change the position of the triangle to a specific one. 
+     */
+    
+    public void changePosition(int x, int y){
+        erase();
+        yPosition = y;
+        xPosition = x;
+        draw();
     }
 }

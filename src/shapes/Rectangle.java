@@ -1,7 +1,5 @@
 package shapes;
 
-import java.awt.*;
-
 /**
  * A rectangle that can be manipulated and that draws itself on a canvas.
  * 
@@ -171,7 +169,7 @@ public class Rectangle{
             canvas.draw(this, color,
                 new java.awt.Rectangle(xPosition, yPosition, 
                                        width, height));
-            canvas.wait(10);
+            canvas.wait(5);
         }
     }
 
@@ -183,6 +181,17 @@ public class Rectangle{
             Canvas canvas = Canvas.getCanvas();
             canvas.erase(this);
         }
+    }
+
+    /**
+     * Change the position of the rectangle to a specific one. 
+     */
+    
+    public void changePosition(int x, int y){
+        erase();
+        yPosition = y;
+        xPosition = x;
+        draw();
     }
 }
 
