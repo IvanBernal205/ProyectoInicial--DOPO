@@ -5,6 +5,10 @@ import shapes.Rectangle;
 
 /**
  * A slot Machine which will be the main element.
+ * 
+ * @author Iván Andres Bernal Sabogal
+ * @author César Santiago Malaver Garnica
+ * @version 23/08/2026
  */
 public class PaintSlotMachine {
 
@@ -26,6 +30,7 @@ public class PaintSlotMachine {
 
     /**
      * Paint a default slot machine.
+     * @param wheels An array with the wheels already created
      */
     public PaintSlotMachine(ArrayList<Wheel> wheels){
         this.wheels = wheels;

@@ -5,8 +5,9 @@ import javax.swing.JOptionPane;
  * A slot machine where you can configure symbols and wheels, and also spin and know if 
  * it is a jackpot.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Iván Andres Bernal Sabogal
+ * @author César Santiago Malaver Garnica
+ * @version 23/08/2026
  */
 public class SlotMachine
 {
@@ -28,6 +29,7 @@ public class SlotMachine
 
     /**
      * Add a wheel to the slot machine in a specific position. 
+     * @param pos The position where the wheel will be added.
      */
     public void addWheel(int pos){
         ok = false;
@@ -48,6 +50,7 @@ public class SlotMachine
 
     /**
      * Delete a wheel at a specific position
+     * @param pos The position of the wheel you want to delete
      */
     public void delWheel(int pos){
         ok = false;
@@ -65,6 +68,8 @@ public class SlotMachine
 
     /**
      * Add a symbol in a specific position in order to be used later.
+     * @param pos The position where you want to add the symbol
+     * @param color The color of the symbol
      */
     public void addSymbol(int pos, String color){
         ok = false;
@@ -86,6 +91,7 @@ public class SlotMachine
 
     /**
      * Delete a symbol previously added.
+     * @param symbol The color of the symbol you want to delete
      */
     public void delSymbol(String symbol){
         ok = false;
@@ -117,6 +123,8 @@ public class SlotMachine
 
     /**
      * Place a symbol in a specific wheel.
+     * @param wheel The position of the wheel where you want to locate a symbol
+     * @param symbol The color of the symbol you want to place
      */
     public void placeSymbol(int wheel, String symbol){
         ok = false;
@@ -152,6 +160,7 @@ public class SlotMachine
 
     /**
      * Spin the symbol of a specific wheel on screen.
+     * @param wheel The position of the wheel you want to spin
      */
     public void spin(int wheel){
         ok = false;
@@ -202,6 +211,7 @@ public class SlotMachine
     
     /**
      * Return a list with the symbols that can be used.
+     * @return List of symbols that can be used.
      */
     public String[] symbols(){
         ok = false;
@@ -226,6 +236,7 @@ public class SlotMachine
     
     /**
      * Return the amount of different symbols on screen.
+     * @return Number of different symbols on screen
      */
     public int distinctSymbols(){ 
         
@@ -235,7 +246,7 @@ public class SlotMachine
             return 0;
         }
 
-        ArrayList <String> colorOfSymbols = new ArrayList<>(); //cambio var espanol
+        ArrayList <String> colorOfSymbols = new ArrayList<>(); 
         
         Symbol actualSymbol;
         String actualColor;
@@ -257,6 +268,7 @@ public class SlotMachine
     
     /**
      * Return a list with the colors of the symbols on screen.
+     * @return List of the symbols on screen.
      */
     public String[] configuration(){
         if (wheels.isEmpty()){
@@ -264,7 +276,7 @@ public class SlotMachine
             return new String[0];
         }
         
-        String [] visibleElements = new String[wheels.size()]; //var a espanol
+        String [] visibleElements = new String[wheels.size()]; 
         
         for (int i = 0; i < wheels.size(); i++){
             Wheel wh = wheels.get(i);
@@ -283,6 +295,7 @@ public class SlotMachine
     /**
      * Show if all symbols on screen have the same color on screen and if it's true, 
      * paint the machine as winner.
+     * @return true if all the symbols on screen are equal, false otherwise
      */
     public boolean isJackpot(){
         ok = false;
@@ -342,11 +355,15 @@ public class SlotMachine
     }
     
     public void exit(){
-        
+        if (isVisible){
+            makeInvisible();
+        }
+        System.exit(0);
     }
     
     /**
      * Indicate if last operacion was succesful
+     * @return true if the last operation was succesful, false otherwise
      */
     public boolean ok(){
         return ok;
@@ -354,6 +371,8 @@ public class SlotMachine
     
     /**
      * Adjust the position based on the zero-indexed standard.
+     * @param pos The position that you want to normalize
+     * @return The position but now it's normalized
      */
     private int normalizePosSym(int pos){
         pos--;  //1 --> 0
@@ -369,6 +388,8 @@ public class SlotMachine
     
     /**
      * Adjust the position based on the zero-indexed standard.
+     * @param pos The position that you want to normalize
+     * @return The position but now it's normalized
      */
     private int normalizePosWheel(int pos){ 
         pos--; // 1 --> 0 
@@ -384,6 +405,7 @@ public class SlotMachine
 
     /**
      * Show different messages on screen.
+     * @param ms The message you want to show on screen
      */
     private void messageForUser(String ms){
         if(isVisible){
@@ -393,6 +415,8 @@ public class SlotMachine
 
     /**
      * Verify if a symbol already exists.
+     * @param symbol The symbol you want to confirm if exists
+     * @return true if the color already exists, false if the color does not exist
      */
     private boolean existColor(String symbol){
         for (Symbol s : symbols) {
