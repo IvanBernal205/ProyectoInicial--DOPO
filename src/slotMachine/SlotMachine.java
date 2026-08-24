@@ -1,5 +1,8 @@
 package slotMachine;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JOptionPane;
 /**
  * A slot machine where you can configure symbols and wheels, and also spin and know if 
@@ -11,6 +14,11 @@ import javax.swing.JOptionPane;
  */
 public class SlotMachine
 {
+    // CSS colors
+    private static final Set<String> CSS_COLORS = new HashSet<>(Arrays.asList(
+        "black", "blue", "brown", "gold", "gray", "green", "magenta",
+        "orange", "pink", "purple", "red", "white", "yellow"));
+
     private ArrayList<Wheel> wheels;
     private ArrayList<Symbol> symbols;
     private PaintSlotMachine psm;
@@ -73,7 +81,12 @@ public class SlotMachine
      */
     public void addSymbol(int pos, String color){
         ok = false;
-        if (existColor(color)) return; 
+        color = normalizeColor(color);
+        if (color == null){
+            messageForUser("El color no es un color CSS valido.");
+            return;
+        }
+        if (existColor(color)) return;
 
         pos = normalizePosSym(pos);
         Symbol sym = new Symbol(color);
@@ -95,6 +108,11 @@ public class SlotMachine
      */
     public void delSymbol(String symbol){
         ok = false;
+        symbol = normalizeColor(symbol);
+        if (symbol == null){
+            messageForUser("El color indicado no es un color CSS valido.");
+            return;
+        }
         if(symbols.isEmpty()){
             messageForUser("No se puede eliminar porque ningun simbolo ha sido creado.");
             return;
@@ -130,6 +148,12 @@ public class SlotMachine
         ok = false;
         if(wheels.isEmpty() || symbols.isEmpty()){
             messageForUser("No se puede agregar un simbolo si no hay ruedas.");
+            return;
+        }
+
+        symbol = normalizeColor(symbol);
+        if (symbol == null){
+            messageForUser("El simbolo que desea asignar no existe");
             return;
         }
 
@@ -205,7 +229,8 @@ public class SlotMachine
             return;
         }
         for (int i = 1; i <= wheels.size(); i++)  spin(i); 
-
+        
+        // isJackpot(); // por si al girar toca indicar que gano
         ok = true;
     }
     
@@ -239,9 +264,8 @@ public class SlotMachine
      * @return Number of different symbols on screen
      */
     public int distinctSymbols(){ 
-        
-        if (wheels.isEmpty()){
-            messageForUser("No hay ruedas.");
+        ok = false;
+        if (wheels.isEmpty() || symbols.isEmpty()){
             ok = true;
             return 0;
         }
@@ -300,42 +324,36 @@ public class SlotMachine
     public boolean isJackpot(){
         ok = false;
         if (wheels.isEmpty() || symbols.isEmpty()){
-            messageForUser("No hay ruedas.");
+            messageForUser("No hay ruedas o simbolos.");
             ok = true;
             return false;
         }
         
-        Wheel wh; 
-        wh = wheels.get(0);
-        
-        Symbol firstSymbol = wh.getShownSymbol();
-        Symbol actualSymbol;
-        
+        boolean jackpot = true;
+        Symbol firstSymbol = wheels.get(0).getShownSymbol();
+
         if(firstSymbol == null){
-            ok = true;
-            return false;
+            jackpot = false;
         }
-        
-        String firstColor = firstSymbol.getColor() ;
-        String actualColor;
-        
-        for (int i = 1; i < wheels.size() ; i++){
-            wh = wheels.get(i);
-            actualSymbol = wh.getShownSymbol();
-            if (actualSymbol == null){
-                ok = true;
-                return false;
-            }
-            actualColor = actualSymbol.getColor();
-            
-            if (!firstColor.equals(actualColor)){
-                ok = true;
-                return false;
+        else{
+            String firstColor = firstSymbol.getColor();
+
+            for (int i = 1; i < wheels.size() && jackpot ; i++){
+                Symbol actualSymbol = wheels.get(i).getShownSymbol();
+
+                if (actualSymbol == null || !firstColor.equals(actualSymbol.getColor())){
+                    jackpot = false;
+                }
             }
         }
-        if(isVisible) psm.reDrawWin();
+
+        if(isVisible){
+            if(jackpot) psm.reDrawWin();
+            else psm.reDrawNormal();
+        }
+
         ok = true;
-        return true;
+        return jackpot;
     }
     
     /**
@@ -424,6 +442,20 @@ public class SlotMachine
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Adjust a color name to the CSS standard form used by the simulator.
+     * @param color The color name given by the user
+     * @return The color name in lower case, or null if it is not a valid CSS color
+     */
+    private String normalizeColor(String color){
+        if (color == null) return null;
+
+        String normalized = color.trim().toLowerCase();
+        if (!CSS_COLORS.contains(normalized)) return null;
+
+        return normalized;
     }
 
     public  ArrayList<Symbol> getSymbols(){

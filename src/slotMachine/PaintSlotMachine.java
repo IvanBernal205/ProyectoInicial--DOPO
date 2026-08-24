@@ -16,6 +16,7 @@ public class PaintSlotMachine {
     private static final int HEIGHT_CANVAS = 5; //  5*60 = 300
     private static final int WIDTH_CANVAS = 23; //  23*60 = 1380
     private boolean visible = false;
+    private boolean winning = false;
     private ArrayList<Wheel> wheels;
 
     private ArrayList<Rectangle> machineRecs = new ArrayList<Rectangle>();
@@ -95,9 +96,18 @@ public class PaintSlotMachine {
     }
 
     /**
-     * Paint the slot machine broders and lever
+     * Paint the slot machine borders and lever with its normal look.
      */
     private void paintMachine(){
+        paintBody("black");
+        winning = false;
+    }
+
+    /**
+     * Paint the borders and the lever of the machine in a given color.
+     * @param color The color of the body of the machine
+     */
+    private void paintBody(String color){
         for (Rectangle r : machineRecs) r.makeInvisible();
         machineRecs.clear();
         for (int i = 0; i < HEIGHT_CANVAS; i++) {
@@ -107,7 +117,7 @@ public class PaintSlotMachine {
                     continue;
                 }
                 Rectangle rec = new Rectangle();
-                rec.changeColor("black");
+                rec.changeColor(color);
                 rec.changeSize(TILE, TILE);
                 rec.changePosition(j*TILE,i*TILE);
                 machineRecs.add(rec);
@@ -224,45 +234,30 @@ public class PaintSlotMachine {
     }
     
     /**
-     * Paint a different style of slot machine if the user wins a jackpot
+     * Paint the machine with the winner look.
+     * It does nothing if the machine already has that look.
      */
     public void reDrawWin(){
+        if (winning) return;
         paintWin();
-        for (Rectangle r : bars) r.makeInvisible();
-        for (Circle c : circ) c.makeInvisible();
-        bars.clear(); 
-        circ.clear();
-
-        paintWheels();
-        paintSymbols();
-
-        if (visible){
-            for (Rectangle re : machineRecs) re.makeVisible();
-            for (Rectangle r : bars) r.makeVisible();
-            for (Circle c : circ) c.makeVisible();
-        }
+        reDraw();
     }
-    
+
+    /**
+     * Paint the machine back with its normal look.
+     * It does nothing if the machine already has that look.
+     */
+    public void reDrawNormal(){
+        if (!winning) return;
+        paintMachine();
+        reDraw();
+    }
+
     /**
      * Paint a different style of slot machine if the user wins a jackpot
      */
     public void paintWin(){
-        for(Rectangle r: machineRecs) r.makeInvisible();
-        machineRecs.clear();
-        
-        for (int i = 0; i < HEIGHT_CANVAS; i++) {
-            for (int j = 0; j < WIDTH_CANVAS; j++) {
-
-                if(i == 0 || j == 0 || i == HEIGHT_CANVAS-1 || j == WIDTH_CANVAS-1 || j == WIDTH_CANVAS-2 || (i==2 && j!=1 && j!=WIDTH_CANVAS-3)){
-                    continue;
-                }
-                Rectangle rec = new Rectangle();
-                rec.changeColor("green");
-                rec.changeSize(TILE, TILE);
-                rec.changePosition(j*TILE,i*TILE);
-                machineRecs.add(rec);
-            }
-        }
-        paintLever();
+        paintBody("green");
+        winning = true;
     }
 }
