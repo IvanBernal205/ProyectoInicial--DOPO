@@ -12,6 +12,12 @@ public class Wheel {
     
     private Integer symbIndex;
     private Symbol shownSymbol;
+    private boolean locked;
+
+    public Wheel(){
+        locked = false;
+    }
+
 
     /**
      * Set a symbol based on the index at symbols list
@@ -67,5 +73,13 @@ public class Wheel {
             return -1;
         }
         return symbIndex;
+    }
+
+    public boolean getLocked(){
+        return locked;
+    }
+
+    public void setLocked(boolean isLock){
+        this.locked = isLock;
     }
 }

@@ -75,6 +75,40 @@ public class SlotMachine
     }
 
     /**
+     * Lock a specific wheel so it doesn't spin.
+     * @param wheel The position of the wheel to lock
+     */
+    public void lock(int wheel){
+        ok = false;
+        if(wheels.isEmpty()){
+            messageForUser("No puedes fijar una rueda si no hay ruedas.");
+            return;
+        }
+        int posWheel = normalizePosWheel(wheel);
+        Wheel wheelToLock = wheels.get(posWheel);
+
+        wheelToLock.setLocked(true);
+        ok = true;
+    }
+
+    /**
+     * Unlock a specific wheel so it can spin.
+     * @param wheel The position of the wheel to unlock.
+     */
+    public void unlock(int wheel){
+        ok = false;
+        if(wheels.isEmpty()){
+            messageForUser("No puedes desfijar una rueda si no hay ruedas.");
+            return;
+        }
+        int posWheel = normalizePosWheel(wheel);
+        Wheel wheelToUnlock = wheels.get(posWheel);
+
+        wheelToUnlock.setLocked(false);
+        ok = true;
+    }
+
+    /**
      * Add a symbol in a specific position in order to be used later.
      * @param pos The position where you want to add the symbol
      * @param color The color of the symbol
@@ -197,7 +231,7 @@ public class SlotMachine
         Wheel wh = wheels.get(wheel);
         Symbol actualSymb = wh.getShownSymbol();
 
-        if (actualSymb == null){
+        if (actualSymb == null || wh.getLocked()){ // Si esta fijo, no cambia de simbolo
             ok = true;
             return;            
         }
