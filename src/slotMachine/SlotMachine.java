@@ -74,6 +74,19 @@ public class SlotMachine
         ok = true;
     }
 
+    public void swap(int wheel1, int wheel2){
+        wheel1 = normalizePosWheel(wheel1);
+        wheel2 = normalizePosWheel(wheel2);
+        
+        if (wheel1 == wheel2) return;
+        
+        Wheel firstWheel = wheels.get(wheel1);
+        Wheel secondWheel = wheels.get(wheel2);
+        
+        wheels.set(wheel2, firstWheel);
+        wheels.set(wheel1, secondWheel);
+    }
+    
     /**
      * Lock a specific wheel so it doesn't spin.
      * @param wheel The position of the wheel to lock
@@ -247,6 +260,25 @@ public class SlotMachine
             psm.reDrawSymbols(); //estaba sin el Symbols del final
         }
         ok = true;
+    }
+    
+    public void spin(int wheel, int steps){
+        Wheel wheel1 = wheels.get(wheel);
+        
+        if (wheel1.getLocked()) return;
+        
+        for (int i = 0; i < steps; i++){
+            spin(wheel);
+        }
+    }
+    
+    public void spin(String[] setSymbols){
+        int i = 0;
+        for (Wheel wh : wheels){
+            if(wh.getLocked()) return;
+            //completar logica
+            i++;
+        }        
     }
     
     /**

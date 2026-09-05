@@ -28,6 +28,12 @@ public class Wheel {
             this.symbIndex = index;
         }
     }
+    
+    public void setSymbol(Symbol symbol){
+        if (shownSymbol !=null){
+            this.shownSymbol = symbol; 
+        }
+    }
 
     /**
      * To replace the symbols after these are deleted
