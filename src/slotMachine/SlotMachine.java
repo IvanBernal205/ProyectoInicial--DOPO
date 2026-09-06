@@ -192,7 +192,11 @@ public class SlotMachine
         }
 
         wheel = normalizePosWheel(wheel);
-        
+        Wheel wh = wheels.get(wheel);
+        if(wh.getLocked()) {
+            messageForUser("La rueda esta bloqueada no se puede actualizar");
+            return;
+        }
         Symbol symb = null;
         int i = 0;
         
@@ -205,11 +209,10 @@ public class SlotMachine
         }
         
         if(symb != null){
-            Wheel wh = wheels.get(wheel);
             wh.placeSymbol(i, new Symbol(symb)); 
             if(isVisible) psm.reDrawSymbols();
         }else{
-            messageForUser("El simbolo que desea asignar no existe");
+            messageForUser("El simbolo que desea asignar no fue añadido previamente");
             return;
         }
 
