@@ -74,6 +74,12 @@ public class SlotMachine
         ok = true;
     }
 
+    
+    /**
+     * Swap the position of two given wheels
+     * @param wheel1 The position of one of the wheels that will be swapped
+     * @param wheel2 The position of one of the wheels that will be swapped
+     */
     public void swap(int wheel1, int wheel2){
         wheel1 = normalizePosWheel(wheel1);
         wheel2 = normalizePosWheel(wheel2);
@@ -269,8 +275,9 @@ public class SlotMachine
      */
     public void spin(int wheel, int steps){
         ok = false;
-        wheel = normalizePosWheel(wheel);
-        Wheel wheel1 = wheels.get(wheel);
+        
+        int pos = normalizePosWheel(wheel);
+        Wheel wheel1 = wheels.get(pos);
         
         if (wheel1.getLocked()) {
             ok = true;
@@ -302,7 +309,7 @@ public class SlotMachine
             
             color = setSymbols[i];
             if (existColor(color)){
-                placeSymbol(i, color);
+                placeSymbol(i+1, color);
             }
         }
     }

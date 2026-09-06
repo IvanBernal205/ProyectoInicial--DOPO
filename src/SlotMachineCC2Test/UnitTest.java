@@ -97,12 +97,12 @@ public class UnitTest
     }
     
     @Test
-    public void shouldSwapThePositionOfTwoDifferentWheels(){
+    public void accordingMgshouldSwapThePositionOfTwoDifferentWheels(){
         SlotMachine sm = new SlotMachine();
         sm.addSymbol(1, "red");
-        sm.addSymbol(1, "blue");
-        sm.addSymbol(1, "green");
-        sm.addSymbol(1, "magenta");
+        sm.addSymbol(2, "blue");
+        sm.addSymbol(3, "green");
+        sm.addSymbol(4, "magenta");
         
         sm.addWheel(1);
         sm.placeSymbol(1, "red");
@@ -119,7 +119,90 @@ public class UnitTest
     }
     
     @Test
-    public void shouldSpinAGivenAmountOfSteps(){
+    public void accordingMgshouldSpinAGivenAmountOfSteps(){
+        SlotMachine sm = new SlotMachine();
+        sm.addSymbol(1, "red");
+        sm.addSymbol(2, "blue");
+        sm.addSymbol(3, "green");
+        sm.addSymbol(4, "magenta");
+        
+        sm.addWheel(1);
+        sm.placeSymbol(1, "red");
+
+        sm.addWheel(2);
+        sm.placeSymbol(2, "blue");
+        
+        sm.addWheel(3);
+        sm.placeSymbol(3, "magenta");
+        
+        assertTrue(sm.ok());
+        sm.spin(2, 2);
+        assertArrayEquals(new String []{"red", "magenta", "magenta"}, sm.configuration());
+        assertFalse(sm.isJackpot());
+        
+        
+        assertTrue(sm.ok());
+        sm.spin(2,2);
+        assertArrayEquals(new String []{"red", "blue", "magenta"}, sm.configuration());
+        assertFalse(sm.isJackpot());
+        
+        assertTrue(sm.ok());
+        sm.spin(1,4);
+        assertArrayEquals(new String []{"red", "blue", "magenta"}, sm.configuration());
+        assertFalse(sm.isJackpot());
+        
+        assertTrue(sm.ok());
+        sm.spin(-15,1);
+        assertArrayEquals(new String []{"blue", "blue", "magenta"}, sm.configuration());
+        assertFalse(sm.isJackpot());
+        
+        assertTrue(sm.ok());
+        sm.spin(3,2);
+        assertArrayEquals(new String []{"blue", "blue", "blue"}, sm.configuration());
+        assertTrue(sm.isJackpot());
         
     }
+    
+    @Test
+    public void accordingMgshoulSetTheMachineInAGivenCombination(){
+        SlotMachine sm = new SlotMachine();
+        sm.addSymbol(1, "red");
+        sm.addSymbol(2, "blue");
+        sm.addSymbol(3, "green");
+        sm.addSymbol(4, "magenta");
+        
+        sm.addWheel(1);
+        sm.placeSymbol(1, "red");
+
+        sm.addWheel(2);
+        sm.placeSymbol(2, "blue");
+        
+        sm.addWheel(3);
+        sm.placeSymbol(3, "magenta");
+        
+        
+        String [] combination = {"green","green","green"}; 
+        sm.spin(combination);
+        
+        assertTrue(sm.ok());
+        assertArrayEquals(new String[]{"green","green","green"}, sm.configuration());
+        assertTrue(sm.isJackpot());
+        
+        
+        String[] combination2 = {"red","magenta","blue"};
+        sm.spin(combination2);
+        
+        assertTrue(sm.ok());
+        assertArrayEquals(new String[]{"red","magenta","blue"}, sm.configuration());
+        assertFalse(sm.isJackpot());
+        
+        
+        String[] combination3 = {"inexistentColor","magenta","blue"};
+        sm.spin(combination2);
+        
+        assertTrue(sm.ok());
+        assertArrayEquals(new String[]{"red","magenta","blue"}, sm.configuration());
+        assertFalse(sm.isJackpot());
+    }
+
 }
