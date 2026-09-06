@@ -164,7 +164,7 @@ public class UnitTest
     }
     
     @Test
-    public void accordingMgshoulSetTheMachineInAGivenCombination(){
+    public void accordingMgshouldSetTheMachineInAGivenCombination(){
         SlotMachine sm = new SlotMachine();
         sm.addSymbol(1, "red");
         sm.addSymbol(2, "blue");
@@ -198,7 +198,7 @@ public class UnitTest
         
         
         String[] combination3 = {"inexistentColor","magenta","blue"};
-        sm.spin(combination2);
+        sm.spin(combination3);
         
         assertTrue(sm.ok());
         assertArrayEquals(new String[]{"red","magenta","blue"}, sm.configuration());
