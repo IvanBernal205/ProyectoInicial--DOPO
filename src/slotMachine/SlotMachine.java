@@ -81,6 +81,12 @@ public class SlotMachine
      * @param wheel2 The position of one of the wheels that will be swapped
      */
     public void swap(int wheel1, int wheel2){
+        ok = false;
+        if(wheels.isEmpty()){
+            messageForUser("No hay ruedas para intercambiar");
+            return;
+        }
+
         wheel1 = normalizePosWheel(wheel1);
         wheel2 = normalizePosWheel(wheel2);
         
@@ -91,6 +97,7 @@ public class SlotMachine
         
         wheels.set(wheel2, firstWheel);
         wheels.set(wheel1, secondWheel);
+        ok = true;
     }
     
     /**
@@ -278,15 +285,16 @@ public class SlotMachine
      */
     public void spin(int wheel, int steps){
         ok = false;
-        
-        int pos = normalizePosWheel(wheel);
-        Wheel wheel1 = wheels.get(pos);
-        
-        if (wheel1.getLocked()) {
-            ok = true;
+        if (wheels.isEmpty() || symbols.isEmpty()){
+            messageForUser("No se puede girar.");
             return;
         }
         
+        int pos = normalizePosWheel(wheel);
+        Wheel wh = wheels.get(pos);
+        
+        if (wh.getLocked()) return;
+
         for (int i = 0; i < steps; i++){
             spin(wheel);
         }
@@ -303,16 +311,11 @@ public class SlotMachine
         String color;
         Wheel wh;
         
-        if (wheels.size() != setSymbols.length){
-            ok = true;
-            return;
-        }
-        
+        if (wheels.size() != setSymbols.length) return;
+
         for (int i = 0; i < wheels.size(); i++){
             wh = wheels.get(i);
-            if(wh.getLocked()){
-                continue;
-            }
+            if(wh.getLocked()) continue; // si la rueda esta bloqueada no cambia
             
             color = setSymbols[i];
             if (existColor(color)){
