@@ -1,7 +1,4 @@
 package SlotMachineCC2Test;
-
-
-
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +27,7 @@ public class UnitTest
      * Called before every test case method.
      */
     @BeforeEach
-    public void setUp()
-    {
+    public void setUp(){
     }
 
     /**
@@ -98,5 +94,32 @@ public class UnitTest
 
         assertTrue(sm.ok());
         assertArrayEquals(new String[]{"blue", "green"}, sm.configuration());
+    }
+    
+    @Test
+    public void shouldSwapThePositionOfTwoDifferentWheels(){
+        SlotMachine sm = new SlotMachine();
+        sm.addSymbol(1, "red");
+        sm.addSymbol(1, "blue");
+        sm.addSymbol(1, "green");
+        sm.addSymbol(1, "magenta");
+        
+        sm.addWheel(1);
+        sm.placeSymbol(1, "red");
+
+        sm.addWheel(2);
+        sm.placeSymbol(2, "blue");
+        
+        sm.addWheel(3);
+        sm.placeSymbol(3, "magenta");
+        
+        sm.swap(1,3);
+        
+        assertArrayEquals(new String []{"magenta","blue","red"}, sm.configuration());
+    }
+    
+    @Test
+    public void shouldSpinAGivenAmountOfSteps(){
+        
     }
 }
