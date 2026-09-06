@@ -1,0 +1,34 @@
+RETROSPECTIVA
+
+1. ¿Cuáles fueron los mini-ciclos definidos? Justifíquenlos.
+Ciclo1: Métodos lock(int wheel) y unlock(int wheel)
+Ciclo2: Métodos swap(int wheel1), spin(int wheel, int steps), spin(String[] setSymbols).
+
+2. ¿Cuál es el estado actual del proyecto en términos de mini-ciclos? ¿por qué?
+Los mini-ciclos fueron completados en su totalidad
+
+3. ¿Cuál fue el tiempo total invertido por cada uno de ustedes? (Horas/Hombre)
+Iván Bernal: 5 horas
+Santiago Malaver: 5 horas
+
+4. ¿Cuál consideran fue el mayor logro? ¿Por qué?
+Comprender y aplicar de forma adecuada los tests unitarios para los métodos realizados en este ciclo.
+
+5. ¿Cuál consideran que fue el mayor problema técnico? ¿Qué hicieron para resolverlo?
+Al principio, desconocer herramientas como assertArrayEquals para en los test poder comprobar otro tipo de casos, pero lo resolvimos investigando más a fondo, prácticando y analizando los errores que podia mostrar cada test.
+
+6. ¿Qué hicieron bien como equipo? ¿Qué se comprometen a hacer para mejorar los resultados?
+Como equipo supimos distribuir de forma equitativa el trabajo, comunicandonos de una forma eficiente, pese a ello nos comprometemos a realizar los avances en un momento más oportuno.
+
+7. Considerando las prácticas XP incluidas en los laboratorios. ¿cuál fue la más útil? ¿por qué?
+Unit test fue nuestra práctica xp más útil, puesto que realizamos los test de cada uno de los métodos agregados durante este ciclo del proyecto.
+
+
+8. ¿Qué referencias usaron? ¿Cuál fue la más útil? Incluyan citas con estándares adecuados.
+
+-W3Schools. CSS Colors. https://www.w3schools.com/css/css_colors.asp
+-Oracle. Class ArrayList, Java Platform SE API Specification. https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html
+-Oracle. Class HashSet, Java Platform SE API Specification. https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashSet.html
+-JUnit. JUnit 5. https://junit.org/
+
+La más útil fue JUnit que nos permitió conocer una amplia cantidad de herramientas para los test.

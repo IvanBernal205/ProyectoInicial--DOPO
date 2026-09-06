@@ -74,6 +74,25 @@ public class SlotMachine
         ok = true;
     }
 
+    
+    /**
+     * Swap the position of two given wheels
+     * @param wheel1 The position of one of the wheels that will be swapped
+     * @param wheel2 The position of one of the wheels that will be swapped
+     */
+    public void swap(int wheel1, int wheel2){
+        wheel1 = normalizePosWheel(wheel1);
+        wheel2 = normalizePosWheel(wheel2);
+        
+        if (wheel1 == wheel2) return;
+        
+        Wheel firstWheel = wheels.get(wheel1);
+        Wheel secondWheel = wheels.get(wheel2);
+        
+        wheels.set(wheel2, firstWheel);
+        wheels.set(wheel1, secondWheel);
+    }
+    
     /**
      * Lock a specific wheel so it doesn't spin.
      * @param wheel The position of the wheel to lock
@@ -250,6 +269,52 @@ public class SlotMachine
             psm.reDrawSymbols(); //estaba sin el Symbols del final
         }
         ok = true;
+    }
+    
+    /**
+     * Spin a wheel a given amount of steps
+     * @param wheel The position of the wheel that will be spinned
+     * @param steps The amount of steps the wheel will spin
+     */
+    public void spin(int wheel, int steps){
+        ok = false;
+        
+        int pos = normalizePosWheel(wheel);
+        Wheel wheel1 = wheels.get(pos);
+        
+        if (wheel1.getLocked()) {
+            ok = true;
+            return;
+        }
+        
+        for (int i = 0; i < steps; i++){
+            spin(wheel);
+        }
+        ok = true;
+    }
+    
+    /**
+     * Set the machine in a given combination.
+     * @param setSymbols An array with the colors that represent the configuration 
+     * of the machine that will be set 
+     */
+    public void spin(String[] setSymbols){
+        String color;
+        Wheel wh;
+        
+        if (wheels.size() != setSymbols.length) return;
+        
+        for (int i = 0; i < wheels.size(); i++){
+            wh = wheels.get(i);
+            if(wh.getLocked()){
+                continue;
+            }
+            
+            color = setSymbols[i];
+            if (existColor(color)){
+                placeSymbol(i+1, color);
+            }
+        }
     }
     
     /**

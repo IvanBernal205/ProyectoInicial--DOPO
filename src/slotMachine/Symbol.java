@@ -9,7 +9,6 @@ import shapes.Circle;
  */
 
 public class Symbol {
-
     private String color;
     private Circle shape;
 
