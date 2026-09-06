@@ -9,8 +9,9 @@ import slotMachine.SlotMachine;
 /**
  * The test class UnitTest.
  *
- * @author  (your name)
- * @version (a version number or a date)
+ * @author  Iván Andrés Bernal Sabogal
+ * @author César Santiago Malaver Garnica
+ * @version 06/06/2026
  */
 public class UnitTest
 {

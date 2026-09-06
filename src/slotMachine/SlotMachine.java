@@ -299,10 +299,14 @@ public class SlotMachine
      * of the machine that will be set 
      */
     public void spin(String[] setSymbols){
+        ok = false;
         String color;
         Wheel wh;
         
-        if (wheels.size() != setSymbols.length) return;
+        if (wheels.size() != setSymbols.length){
+            ok = true;
+            return;
+        }
         
         for (int i = 0; i < wheels.size(); i++){
             wh = wheels.get(i);
@@ -315,6 +319,7 @@ public class SlotMachine
                 placeSymbol(i+1, color);
             }
         }
+        ok = true;
     }
     
     /**
