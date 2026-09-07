@@ -1,4 +1,4 @@
-package SlotMachineCC2Test;
+package UnitTests;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,12 +13,12 @@ import slotMachine.SlotMachine;
  * @author César Santiago Malaver Garnica
  * @version 06/06/2026
  */
-public class UnitTest
+public class SlotMachineCC2Test
 {
     /**
      * Default constructor for test class UnitTest
      */
-    public UnitTest()
+    public SlotMachineCC2Test()
     {
     }
 

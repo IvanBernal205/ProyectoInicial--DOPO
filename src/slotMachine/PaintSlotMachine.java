@@ -36,13 +36,6 @@ public class PaintSlotMachine {
     public PaintSlotMachine(ArrayList<Wheel> wheels){
         this.wheels = wheels;
     }
-    
-
-    public void build (){
-        // paintMachine();
-        // paintWheels();
-        // paintSymbols();
-    }
 
     /**
      * Make visible every instance used to create the slot machine and

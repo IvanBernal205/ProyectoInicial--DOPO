@@ -97,6 +97,7 @@ public class SlotMachine
         
         wheels.set(wheel2, firstWheel);
         wheels.set(wheel1, secondWheel);
+        if (isVisible) psm.reDraw();    
         ok = true;
     }
     
@@ -311,7 +312,10 @@ public class SlotMachine
         String color;
         Wheel wh;
         
-        if (wheels.size() != setSymbols.length) return;
+        if (wheels.size() != setSymbols.length){
+            messageForUser("El número de símbolos no coincide con el número de ruedas.");
+            return;
+        } 
 
         for (int i = 0; i < wheels.size(); i++){
             wh = wheels.get(i);
@@ -405,6 +409,7 @@ public class SlotMachine
      * @return List of the symbols on screen.
      */
     public String[] configuration(){
+        ok = true;
         if (wheels.isEmpty()){
             messageForUser("No hay ruedas.");
             return new String[0];
