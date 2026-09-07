@@ -1,4 +1,3 @@
-
 import slotMachine.SlotMachine;
 
 /**
@@ -7,7 +6,7 @@ import slotMachine.SlotMachine;
 public class Presentacion
 {
     public static void main(String[] args) {
-
+        
         // Presentación 1 de los metodos lock() y unlock().
         SlotMachine sm = new SlotMachine();
         sm.makeVisible();
@@ -63,17 +62,75 @@ public class Presentacion
 
 
 
+        
+        // Presentación 2 de los metodos swap(), spin(wheel:int, steps:int) y spin(setSymbols:String[])
+        SlotMachine stm = new SlotMachine();
+        stm.makeVisible();
 
-        // Presentación 2 de los metodos swap(), spin(wheel:int, steps:int) y spint(setSymbols:String[])
-        SlotMachine slotM = new SlotMachine();
-        slotM.makeVisible();
+        stm.addSymbol(1, "red");
+        stm.addSymbol(2, "green");
+        stm.addSymbol(3, "blue");
+        stm.addSymbol(4, "magenta");
+        stm.addSymbol(5, "gold");
+        stm.addSymbol(6, "orange");
+        stm.addSymbol(7, "pink");
+        stm.addSymbol(8, "brown");
+        // [red, green, blue, magenta, gold, orange, pink]
+        
+        
+        stm.addWheel(1);
+        stm.placeSymbol(1, "gold");
+
+        stm.addWheel(2);
+        stm.placeSymbol(2, "blue");
+        
+        stm.addWheel(3);
+        stm.placeSymbol(3, "red"); 
+        
+        stm.addWheel(4);
+        stm.placeSymbol(4, "brown");
+        
+        stm.addWheel(5);
+        stm.placeSymbol(5, "green");
+         
+        //[gold, blue, red, brown, green]
+        
+        //swap()
+        
+        stm.swap(2,5);
+        stm.swap(5,4);
+        stm.swap(1,3);
+        
+        //[red, green, gold, blue, brown]
+        
+        
+        //spin(wheel:int, steps:int)
+        stm.isJackpot();
+        stm.spin(1,3);
+        //[gold, green, gold, blue, brown]
+        stm.spin(2,1);
+        //[gold, gold, gold, blue, brown]
+        stm.spin(4,4);
+        //[gold, gold, gold, gold, brown]
+        stm.spin(500,2);
+        //[gold, gold, gold, gold, gold]
+        stm.isJackpot();
+        
+        //spin(setSymbols:String[])
+        String [] combinationGiven = {"inexistentColor","brown","red","blue","green"};
+        stm.spin(combinationGiven);
+        //[gold, brown, red, blue, green]
+        stm.isJackpot();
+        
+        String [] combinationGiven2 = {"red","red","red","red","red"};
+        stm.spin(combinationGiven2);
+        //[red, red, red, red, red]
+        stm.isJackpot();
 
 
 
 
-
-
-        slotM.makeInvisible();
-        slotM.exit();
+        stm.makeInvisible();
+        stm.exit();
     }
 }
