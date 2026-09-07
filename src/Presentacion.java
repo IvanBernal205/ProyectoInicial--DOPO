@@ -9,7 +9,7 @@ public class Presentacion
         
         // Presentación 1 de los metodos lock() y unlock().
         SlotMachine sm = new SlotMachine();
-        sm.makeVisible();
+        //sm.makeVisible();
 
         sm.addSymbol(1, "red");
         sm.addSymbol(2, "green");
@@ -55,7 +55,7 @@ public class Presentacion
         sm.spin();
         // [pink, pink, pink, pink]
         sm.isJackpot();
-        sm.makeInvisible();
+        //sm.makeInvisible();
 
 
 
@@ -106,13 +106,13 @@ public class Presentacion
         
         //spin(wheel:int, steps:int)
         stm.isJackpot();
-        stm.spin(1,3);
+        stm.spin(1,4);
         //[gold, green, gold, blue, brown]
-        stm.spin(2,1);
+        stm.spin(2,3);
         //[gold, gold, gold, blue, brown]
-        stm.spin(4,4);
+        stm.spin(4,2);
         //[gold, gold, gold, gold, brown]
-        stm.spin(500,2);
+        stm.spin(500,5);
         //[gold, gold, gold, gold, gold]
         stm.isJackpot();
         

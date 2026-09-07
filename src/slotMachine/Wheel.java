@@ -80,7 +80,8 @@ public class Wheel {
         }
         return symbIndex;
     }
-
+    
+    //is
     public boolean getLocked(){
         return locked;
     }
