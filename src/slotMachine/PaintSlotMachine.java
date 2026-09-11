@@ -24,17 +24,15 @@ public class PaintSlotMachine {
     private ArrayList<Circle> circ = new ArrayList<Circle>();  //aqui se guardan los symbols
     
     private Circle circLever; 
-    //private ArrayList<Rectangle> rectLever = new ArrayList<Rectangle>();
-    //private ArrayList<Circle> circLever = new ArrayList<Circle>();
-    
     private Rectangle actualRect;
 
     /**
-     * Paint a default slot machine.
+     * Create a new PaintSlotMachine with the given wheels.
      * @param wheels An array with the wheels already created
      */
     public PaintSlotMachine(ArrayList<Wheel> wheels){
         this.wheels = wheels;
+        winning = false;
     }
 
     /**
@@ -43,7 +41,7 @@ public class PaintSlotMachine {
      */
     public void makeVisible(){
         visible = true;
-        paintMachine();
+        paintBody("black");
         reDraw();
     }
 
@@ -86,14 +84,6 @@ public class PaintSlotMachine {
         if(visible){
             for(Circle c:circ) c.makeVisible();
         }
-    }
-
-    /**
-     * Paint the slot machine borders and lever with its normal look.
-     */
-    private void paintMachine(){
-        paintBody("black");
-        winning = false;
     }
 
     /**
@@ -181,25 +171,19 @@ public class PaintSlotMachine {
         rec.changeColor("black");
         rec.changeSize(10, 60);
         rec.changePosition(21*TILE,3*TILE);
-        //rec.makeVisible();
         machineRecs.add(rec);
-        //rectLever.add(rec);
 
         Rectangle rec1 = new Rectangle();
         rec1.changeColor("black");
         rec1.changeSize(70, 10);
         rec1.changePosition(22*TILE,2*TILE);
-        //
-        //rec1.makeVisible();
         machineRecs.add(rec1); //Cambio Provisional
-        //rectLever.add(rec1);
 
         if (circLever != null) circLever.makeInvisible();
         circLever = new Circle();
         circLever.changeColor("red");
         circLever.changeSize(40);
         circLever.changePosition(21*TILE+45,1*TILE+20);
-        //circ.add(cir);
         circLever.makeVisible(); //circle rojo de lever
     }
     
@@ -252,5 +236,9 @@ public class PaintSlotMachine {
     public void paintWin(){
         paintBody("green");
         winning = true;
+    }
+
+    public void paintLeverAnimation(){
+        
     }
 }

@@ -580,4 +580,12 @@ public class SlotMachine
     public  ArrayList<Wheel> getWheels(){
         return wheels;
     }
+
+
+
+
+
+    public void temp(){
+        psm.paintLeverAnimation();
+    }
 }
