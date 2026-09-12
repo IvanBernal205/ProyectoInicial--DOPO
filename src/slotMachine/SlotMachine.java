@@ -342,9 +342,11 @@ public class SlotMachine
             messageForUser("No hay simbolos.");
             return;
         }
+        psm.paintLeverAnimation();
         for (int i = 1; i <= wheels.size(); i++)  spin(i); 
         
         // isJackpot(); // por si al girar toca indicar que gano
+        psm.paintLever();
         ok = true;
     }
     
@@ -463,7 +465,7 @@ public class SlotMachine
         }
 
         if(isVisible){
-            if(jackpot) psm.reDrawWin();
+            if(jackpot) psm.paintWin();
             else psm.reDrawNormal();
         }
 
@@ -579,13 +581,5 @@ public class SlotMachine
 
     public  ArrayList<Wheel> getWheels(){
         return wheels;
-    }
-
-
-
-
-
-    public void temp(){
-        psm.paintLeverAnimation();
     }
 }

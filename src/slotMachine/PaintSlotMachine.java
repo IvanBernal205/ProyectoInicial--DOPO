@@ -1,6 +1,7 @@
 package slotMachine;
 import java.util.ArrayList;
 import shapes.Circle;
+import shapes.Figure;
 import shapes.Rectangle;
 
 /**
@@ -19,12 +20,10 @@ public class PaintSlotMachine {
     private boolean winning = false;
     private ArrayList<Wheel> wheels;
 
-    private ArrayList<Rectangle> machineRecs = new ArrayList<Rectangle>();
-    private ArrayList<Rectangle> bars = new ArrayList<>();
-    private ArrayList<Circle> circ = new ArrayList<Circle>();  //aqui se guardan los symbols
-    
-    private Circle circLever; 
-    private Rectangle actualRect;
+    private ArrayList<Figure> machineFig = new ArrayList<>();
+    private ArrayList<Figure> wheelsFig = new ArrayList<>();
+    private ArrayList<Figure> symbolsFig = new ArrayList<>();
+    private ArrayList<Figure> leverFig = new ArrayList<>();
 
     /**
      * Create a new PaintSlotMachine with the given wheels.
@@ -40,9 +39,12 @@ public class PaintSlotMachine {
      * the recent symbols on screen.
      */
     public void makeVisible(){
+        if(visible) return; // Si ya era visible no se pinta de nuevo
         visible = true;
         paintBody("black");
-        reDraw();
+        paintLever();
+        paintWheels();
+        paintSymbols();
     }
 
     /**
@@ -58,32 +60,26 @@ public class PaintSlotMachine {
      * Draw the elements of the slot machine
      */
     public void reDraw(){
-        for (Rectangle r : bars) r.makeInvisible();
-        for (Circle c : circ) c.makeInvisible();
-        bars.clear(); 
-        circ.clear();
+        for(Figure f : wheelsFig) f.makeInvisible();
+        for(Figure f : symbolsFig) f.makeInvisible();
+        symbolsFig.clear();
+        wheelsFig.clear(); 
 
         paintWheels();
         paintSymbols();
 
-        if (visible){
-            for (Rectangle re : machineRecs) re.makeVisible();
-            for (Rectangle r : bars) r.makeVisible();
-            for (Circle c : circ) c.makeVisible();
-        }
+        for(Figure f : wheelsFig) f.makeVisible();
+        for(Figure f : symbolsFig) f.makeVisible();
     }
     
     /**
      * Draw the recent symbols on the slot machine.
      */
     public void reDrawSymbols(){
-        for (Circle c: circ) c.makeInvisible();
-        circ.clear();
+        for(Figure f : symbolsFig) f.makeInvisible();
+        symbolsFig.clear();
         paintSymbols();
-        
-        if(visible){
-            for(Circle c:circ) c.makeVisible();
-        }
+        for(Figure f : symbolsFig) f.makeVisible();
     }
 
     /**
@@ -91,22 +87,33 @@ public class PaintSlotMachine {
      * @param color The color of the body of the machine
      */
     private void paintBody(String color){
-        for (Rectangle r : machineRecs) r.makeInvisible();
-        machineRecs.clear();
-        for (int i = 0; i < HEIGHT_CANVAS; i++) {
-            for (int j = 0; j < WIDTH_CANVAS; j++) {
+        Rectangle topBar = new Rectangle();
+        topBar.changeColor(color);
+        topBar.changeSize(TILE, TILE*(WIDTH_CANVAS-3));
+        topBar.changePosition(TILE, TILE);
+        topBar.makeVisible();
+        machineFig.add(topBar);
 
-                if(i == 0 || j == 0 || i == HEIGHT_CANVAS-1 || j == WIDTH_CANVAS-1 || j == WIDTH_CANVAS-2 || (i==2 && j!=1 && j!=WIDTH_CANVAS-3)){
-                    continue;
-                }
-                Rectangle rec = new Rectangle();
-                rec.changeColor(color);
-                rec.changeSize(TILE, TILE);
-                rec.changePosition(j*TILE,i*TILE);
-                machineRecs.add(rec);
-            }
-        }
-        paintLever();
+        Rectangle leftEdge = new Rectangle();
+        leftEdge.changeColor(color);
+        leftEdge.changeSize(TILE, TILE);
+        leftEdge.changePosition(TILE, TILE*2);
+        leftEdge.makeVisible();
+        machineFig.add(leftEdge);
+
+        Rectangle rightEdge = new Rectangle();
+        rightEdge.changeColor(color);
+        rightEdge.changeSize(TILE, TILE);
+        rightEdge.changePosition(TILE*(WIDTH_CANVAS-3), TILE*2);
+        rightEdge.makeVisible();
+        machineFig.add(rightEdge);
+
+        Rectangle bottomBar = new Rectangle();
+        bottomBar.changeColor(color);
+        bottomBar.changeSize(TILE, TILE*(WIDTH_CANVAS-3));
+        bottomBar.changePosition(TILE, TILE*3);
+        bottomBar.makeVisible();
+        machineFig.add(bottomBar);
     }
 
     /**
@@ -127,7 +134,7 @@ public class PaintSlotMachine {
             int xFinal = (int) x-1;
 
             rec.changePosition(xFinal,2*TILE);
-            bars.add(rec);
+            wheelsFig.add(rec);
         }
     }
 
@@ -150,74 +157,47 @@ public class PaintSlotMachine {
             int xFinal = (int) x;
 
             cir.changePosition(xFinal, 2*TILE + 10);
-            circ.add(cir); 
-        }
-    }
-
-    /**
-     * Erase the symbols on screen.
-     */
-    private void eraseSymbols(){
-        for (int i = 0; i < circ.size(); i++){
-            circ.get(i).makeInvisible();
+            symbolsFig.add(cir); 
         }
     }
     
     /**
      * Paint the lever on screen
      */
-    private void paintLever(){
+    public void paintLever(){
+        for(Figure f : leverFig) f.makeInvisible();
+        leverFig.clear();
+        
         Rectangle rec = new Rectangle();
         rec.changeColor("black");
         rec.changeSize(10, 60);
         rec.changePosition(21*TILE,3*TILE);
-        machineRecs.add(rec);
+        rec.makeVisible();
+        leverFig.add(rec);
 
         Rectangle rec1 = new Rectangle();
         rec1.changeColor("black");
         rec1.changeSize(70, 10);
         rec1.changePosition(22*TILE,2*TILE);
-        machineRecs.add(rec1); //Cambio Provisional
+        rec1.makeVisible();
+        leverFig.add(rec1);
 
-        if (circLever != null) circLever.makeInvisible();
-        circLever = new Circle();
+        Circle circLever = new Circle();
         circLever.changeColor("red");
         circLever.changeSize(40);
         circLever.changePosition(21*TILE+45,1*TILE+20);
-        circLever.makeVisible(); //circle rojo de lever
+        circLever.makeVisible();
+        leverFig.add(circLever);
     }
     
     /**
      * Erase the slot machine from the screen
      */
     private void eraseMachine(){
-        //if (!visible) return; //si ya es invisible, retorna
-        for (int i = 0; i < bars.size(); i++){
-            bars.get(i).makeInvisible();
-        }
-        
-        for (int i = 0; i < machineRecs.size(); i++){ //para hacer invisible el contorno negro
-            actualRect = machineRecs.get(i);
-            actualRect.makeInvisible();
-        }
-        
-        if (circLever != null) circLever.makeInvisible(); //hace invisible el circulo rojo
-        eraseSymbols(); //hace invisible los simbolos
-        
-        for (int i = 0; i < bars.size(); i++){
-            bars.get(i).makeInvisible(); //hace invisibles las barritas divisoras de wheels.
-        }
-        visible = false;
-    }
-    
-    /**
-     * Paint the machine with the winner look.
-     * It does nothing if the machine already has that look.
-     */
-    public void reDrawWin(){
-        if (winning) return;
-        paintWin();
-        reDraw();
+        for(Figure f : machineFig) f.makeInvisible(); // hace inivisible la maquina
+        for(Figure f : leverFig) f.makeInvisible(); // hace invisible la palanca
+        for(Figure f : symbolsFig) f.makeInvisible(); // hace invisible las simbolos
+        for(Figure f : wheelsFig) f.makeInvisible(); // hace invisible las ruedas de la maquina
     }
 
     /**
@@ -226,19 +206,35 @@ public class PaintSlotMachine {
      */
     public void reDrawNormal(){
         if (!winning) return;
-        paintMachine();
-        reDraw();
+        for(Figure f : machineFig) f.changeColor("black");
+        winning = false;
     }
 
     /**
      * Paint a different style of slot machine if the user wins a jackpot
      */
     public void paintWin(){
-        paintBody("green");
+        if (winning) return;
+        for(Figure f : machineFig) f.changeColor("green");
         winning = true;
     }
 
     public void paintLeverAnimation(){
-        
+        for(Figure f : leverFig) f.makeInvisible();
+        leverFig.clear();
+
+        Rectangle rec = new Rectangle();
+        rec.changeColor("black");
+        rec.changeSize(10, 60);
+        rec.changePosition(21*TILE,3*TILE);
+        rec.makeVisible();
+        leverFig.add(rec);
+
+        Circle circLever = new Circle();
+        circLever.changeColor("red");
+        circLever.changeSize(40);
+        circLever.changePosition(22*TILE,2*TILE+45);
+        circLever.makeVisible();
+        leverFig.add(circLever);
     }
 }
