@@ -37,10 +37,19 @@ public class Rectangle extends Figure{
         draw();
     }
 
+    /**
+     * Change the size using the same value for height and width.
+     * @param size the new height and width (in pixels). Size must be >=0.
+     */
+    @Override
+    public void changeSize(int size){
+        changeSize(size, size);
+    }
+
     /*
      * Draw the rectangle with current specifications on screen.
      */
-
+    @Override
     protected void draw() {
         if(isVisible) {
             Canvas canvas = Canvas.getCanvas();

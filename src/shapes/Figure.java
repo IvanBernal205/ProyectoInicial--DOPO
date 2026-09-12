@@ -138,6 +138,9 @@ public class Figure{
         }
     }
 
+    public void changeSize(int size){
+    }
+
     /**
      * Change the color.
      * @param color the new color. Valid colors are "red", "yellow", "blue", "green",

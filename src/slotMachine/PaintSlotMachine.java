@@ -69,7 +69,10 @@ public class PaintSlotMachine {
         paintSymbols();
 
         for(Figure f : wheelsFig) f.makeVisible();
-        for(Figure f : symbolsFig) f.makeVisible();
+        for(Figure f : symbolsFig) {
+            wait(200);
+            f.makeVisible();
+        }
     }
     
     /**
@@ -79,7 +82,10 @@ public class PaintSlotMachine {
         for(Figure f : symbolsFig) f.makeInvisible();
         symbolsFig.clear();
         paintSymbols();
-        for(Figure f : symbolsFig) f.makeVisible();
+        for(Figure f : symbolsFig) {
+            wait(200);
+            f.makeVisible();
+        }
     }
 
     /**
@@ -149,7 +155,7 @@ public class PaintSlotMachine {
         for (int i = 0; i < numWh; i++) {
             Symbol symb = wheels.get(i).getShownSymbol();
             if (symb == null || symb.getShape() == null) continue;
-            Circle cir = symb.getShape();
+            Figure cir = symb.getShape();
             cir.changeColor(symb.getColor());
             cir.changeSize(40);
 
@@ -165,6 +171,7 @@ public class PaintSlotMachine {
      * Paint the lever on screen
      */
     public void paintLever(){
+        if(!visible) return;
         for(Figure f : leverFig) f.makeInvisible();
         leverFig.clear();
         
@@ -219,7 +226,11 @@ public class PaintSlotMachine {
         winning = true;
     }
 
+    /**
+     * Paint the lever animation
+     */
     public void paintLeverAnimation(){
+        if(!visible) return;
         for(Figure f : leverFig) f.makeInvisible();
         leverFig.clear();
 
@@ -236,5 +247,19 @@ public class PaintSlotMachine {
         circLever.changePosition(22*TILE,2*TILE+45);
         circLever.makeVisible();
         leverFig.add(circLever);
+    }
+
+    /**
+     * Wait for a specified number of milliseconds before finishing.
+     * This provides an easy way to specify a small delay which can be
+     * used when producing animations.
+     * @param  milliseconds  the number 
+     */
+    private void wait(int milliseconds){
+        try{
+            Thread.sleep(milliseconds);
+        } catch (Exception e){
+            // ignoring exception at the moment
+        }
     }
 }
