@@ -6,6 +6,8 @@
 bluej.pkg
 bluej.pkh
 
-# Javadoc generado
+
 doc/
 pruebas/
+.vscode/
+bin/

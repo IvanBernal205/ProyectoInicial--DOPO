@@ -1,15 +1,15 @@
 import slotMachine.SlotMachine;
 
 /**
- * Casos de prueba pra la presentacion.
- */
+* Casos de prueba pra la presentacion.
+*/
 public class Presentacion
 {
-    public static void main(String[] args) {
+public static void main(String[] args) {
         
         // Presentación 1 de los metodos lock() y unlock().
         SlotMachine sm = new SlotMachine();
-        //sm.makeVisible();
+        sm.makeVisible();
 
         sm.addSymbol(1, "red");
         sm.addSymbol(2, "green");
@@ -55,7 +55,7 @@ public class Presentacion
         sm.spin();
         // [pink, pink, pink, pink]
         sm.isJackpot();
-        //sm.makeInvisible();
+        sm.makeInvisible();
 
 
 
@@ -132,5 +132,5 @@ public class Presentacion
 
         stm.makeInvisible();
         stm.exit();
-    }
+}
 }

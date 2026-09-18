@@ -1,9 +1,7 @@
 package slotMachine;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.JOptionPane;
+import java.util.*;
+
 /**
  * A slot machine where you can configure symbols and wheels, and also spin and know if 
  * it is a jackpot.
@@ -17,7 +15,7 @@ public class SlotMachine
     // CSS colors
     private static final Set<String> CSS_COLORS = new HashSet<>(Arrays.asList(
         "black", "blue", "brown", "gold", "gray", "green", "magenta",
-        "orange", "pink", "purple", "red", "white", "yellow"));
+        "orange", "pink", "purple", "red", "yellow"));
 
     private ArrayList<Wheel> wheels;
     private ArrayList<Symbol> symbols;
@@ -31,6 +29,14 @@ public class SlotMachine
     public SlotMachine(){
         wheels = new ArrayList<>();
         symbols = new ArrayList<>();
+        psm = new PaintSlotMachine(wheels);
+        ok = true;
+    }
+    
+    public SlotMachine(int n){
+        wheels = new ArrayList<>();
+        symbols = new ArrayList<>();
+        create(n);
         psm = new PaintSlotMachine(wheels);
         ok = true;
     }
@@ -295,10 +301,22 @@ public class SlotMachine
         Wheel wh = wheels.get(pos);
         
         if (wh.getLocked()) return;
-
-        for (int i = 0; i < steps; i++){
-            spin(wheel);
-        }
+        
+        int movement = (steps > 0) ? 1 : -1;
+        int size = symbols.size();
+        
+        for (int i = 0; i < Math.abs(steps); i++) {
+            int actualIndex = wh.getSymbIndex();
+            int nextIndex = ((actualIndex + movement) % size + size) % size;
+        
+            Symbol s = symbols.get(nextIndex);
+            wh.placeSymbol(nextIndex, new Symbol(s));
+        
+            if (isVisible) {
+                // Cuando se usa spin() se repinta cada vez que una rueda gira y se ve raro.
+                psm.reDrawSymbols();
+            }
+        }   
         ok = true;
     }
     
@@ -342,9 +360,11 @@ public class SlotMachine
             messageForUser("No hay simbolos.");
             return;
         }
+        psm.paintLeverAnimation();
         for (int i = 1; i <= wheels.size(); i++)  spin(i); 
         
         // isJackpot(); // por si al girar toca indicar que gano
+        psm.paintLever();
         ok = true;
     }
     
@@ -463,7 +483,7 @@ public class SlotMachine
         }
 
         if(isVisible){
-            if(jackpot) psm.reDrawWin();
+            if(jackpot) psm.paintWin();
             else psm.reDrawNormal();
         }
 
@@ -571,6 +591,25 @@ public class SlotMachine
         if (!CSS_COLORS.contains(normalized)) return null;
 
         return normalized;
+    }
+    
+    private void create(int n){
+        List<String> shuffledColors = new ArrayList<>(CSS_COLORS);
+        Collections.shuffle(shuffledColors);
+        
+        for (int i = 0; i < n && i < shuffledColors.size(); i++) {
+            String color = shuffledColors.get(i);
+            Symbol sym = new Symbol(color);
+            symbols.add(i, sym);
+        }
+        
+        for (int i = 0; i < symbols.size(); i++){
+            int randNum = (int) (Math.random() * (symbols.size())); 
+            Wheel wh = new Wheel();
+            wheels.add(i, wh);
+            Symbol symb = symbols.get(randNum);
+            wh.placeSymbol(i, new Symbol(symb));
+        }
     }
 
     public  ArrayList<Symbol> getSymbols(){

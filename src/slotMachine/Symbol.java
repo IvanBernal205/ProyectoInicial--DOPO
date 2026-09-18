@@ -1,5 +1,8 @@
 package slotMachine;
 import shapes.Circle;
+import shapes.Figure;
+import shapes.Rectangle;
+import shapes.Triangle;
 
 /**
  * A symbol that can be used in different wheels.
@@ -9,16 +12,21 @@ import shapes.Circle;
  */
 
 public class Symbol {
+    public static final String[] FIGURES = {"triangulo", "rectangulo", "circulo"};
     private String color;
-    private Circle shape;
+    private String selectShape;
+    private Figure shape;
 
     /**
      * Create a symbol with a given color 
      * @param color The color of the symbol what will be created
      */
     public Symbol(String color){
+        int index = (int) (Math.random() * 3);
+
         this.color = color;
         this.shape = null;
+        this.selectShape = FIGURES[index];
     }
 
     /**
@@ -27,14 +35,27 @@ public class Symbol {
      */
     public Symbol(Symbol original){
         this.color = original.color;
-        this.shape = new Circle();
+        this.shape = assignFigure(original.selectShape);
+    }
+
+    private Figure assignFigure(String sShape){
+        switch (sShape) {
+            case "triangulo":
+                return new Triangle();
+            case "rectangulo":
+                return new Rectangle();
+            case "circulo":
+                return new Circle();
+            default:
+                return new Circle();
+        }
     }
 
     public String getColor(){
         return this.color;
     }
 
-    public Circle getShape(){
+    public Figure getShape(){
         return shape;
     }
 
