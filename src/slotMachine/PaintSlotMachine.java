@@ -141,6 +141,7 @@ public class PaintSlotMachine {
 
             rec.changePosition(xFinal,2*TILE);
             wheelsFig.add(rec);
+            rec.makeVisible();
         }
     }
 
@@ -154,16 +155,19 @@ public class PaintSlotMachine {
         
         for (int i = 0; i < numWh; i++) {
             Symbol symb = wheels.get(i).getShownSymbol();
-            if (symb == null || symb.getShape() == null) continue;
-            Figure cir = symb.getShape();
-            cir.changeColor(symb.getColor());
-            cir.changeSize(40);
+            if (symb == null || symb.getShape() == null) {
+                continue;
+            }
+            Figure shp = symb.getShape();
+            shp.changeColor(symb.getColor());
+            shp.changeSize(40);
 
             double x =  (2 + lenSection*i)*TILE + ((lenSection*TILE) - 40)/2;
             int xFinal = (int) x;
 
-            cir.changePosition(xFinal, 2*TILE + 10);
-            symbolsFig.add(cir); 
+            shp.changePosition(xFinal, 2*TILE + 10);
+            symbolsFig.add(shp); 
+            shp.makeVisible();
         }
     }
     

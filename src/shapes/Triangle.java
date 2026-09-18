@@ -53,7 +53,7 @@ public class Triangle extends Figure{
     protected void draw(){
         if(isVisible) {
             Canvas canvas = Canvas.getCanvas();
-            int[] xpoints = { xPosition, xPosition + (width/2), xPosition - (width/2) };
+            int[] xpoints = { xPosition + (width/2), xPosition + width, xPosition };
             int[] ypoints = { yPosition, yPosition + height, yPosition + height };
             canvas.draw(this, color, new Polygon(xpoints, ypoints, 3));
             // canvas.wait(5);
