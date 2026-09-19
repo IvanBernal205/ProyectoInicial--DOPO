@@ -1,6 +1,6 @@
 package slotMachine;
-import javax.swing.JOptionPane;
 import java.util.*;
+import javax.swing.JOptionPane;
 
 /**
  * A slot machine where you can configure symbols and wheels, and also spin and know if 
@@ -593,6 +593,7 @@ public class SlotMachine
         return normalized;
     }
     
+    // Crea una cantidad de ruedas y simbolos aleatorios para el slot machine
     private void create(int n){
         List<String> shuffledColors = new ArrayList<>(CSS_COLORS);
         Collections.shuffle(shuffledColors);
@@ -608,7 +609,7 @@ public class SlotMachine
             Wheel wh = new Wheel();
             wheels.add(i, wh);
             Symbol symb = symbols.get(randNum);
-            wh.placeSymbol(i, new Symbol(symb));
+            wh.placeSymbol(randNum, new Symbol(symb));
         }
     }
 
