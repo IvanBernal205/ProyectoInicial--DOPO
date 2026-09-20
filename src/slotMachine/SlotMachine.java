@@ -14,8 +14,11 @@ public class SlotMachine
 {
     // CSS colors
     private static final Set<String> CSS_COLORS = new HashSet<>(Arrays.asList(
-        "black", "blue", "brown", "gold", "gray", "green", "magenta",
-        "orange", "pink", "purple", "red", "yellow"));
+        "beige", "black", "blue", "brown", "coral", "crimson", "cyan",
+        "gold", "gray", "green", "indigo", "khaki", "lavender", "magenta",
+        "maroon", "navy", "olive", "orange", "orchid", "pink", "plum",
+        "purple", "red", "salmon", "silver", "tan", "teal", "tomato",
+        "turquoise", "violet", "yellow"));
 
     private ArrayList<Wheel> wheels;
     private ArrayList<Symbol> symbols;
@@ -243,7 +246,7 @@ public class SlotMachine
         
         if(symb != null){
             wh.placeSymbol(i, new Symbol(symb)); 
-            if(isVisible) psm.reDrawSymbols();
+            if(isVisible) psm.reDrawSymbol(wh, wheel);
         }else{
             messageForUser("El simbolo que desea asignar no fue añadido previamente");
             return;
@@ -280,7 +283,7 @@ public class SlotMachine
         
         if(isVisible){
             // Cuando se usa spin() se repinta cada qe una rueda gira y se ve raro.
-            psm.reDrawSymbols(); //estaba sin el Symbols del final
+            psm.reDrawSymbol(wh, wheel); //estaba sin el Symbols del final
         }
         ok = true;
     }
@@ -314,7 +317,7 @@ public class SlotMachine
         
             if (isVisible) {
                 // Cuando se usa spin() se repinta cada vez que una rueda gira y se ve raro.
-                psm.reDrawSymbols();
+                psm.reDrawSymbol(wh, pos);
             }
         }   
         ok = true;

@@ -61,7 +61,10 @@ public class PaintSlotMachine {
      */
     public void reDraw(){
         for(Figure f : wheelsFig) f.makeInvisible();
-        for(Figure f : symbolsFig) f.makeInvisible();
+        for(Figure f : symbolsFig) { 
+            if (f == null) continue;
+            f.makeInvisible();
+        }
         symbolsFig.clear();
         wheelsFig.clear(); 
 
@@ -70,6 +73,7 @@ public class PaintSlotMachine {
 
         for(Figure f : wheelsFig) f.makeVisible();
         for(Figure f : symbolsFig) {
+            if (f == null) continue;
             wait(200);
             f.makeVisible();
         }
@@ -79,13 +83,45 @@ public class PaintSlotMachine {
      * Draw the recent symbols on the slot machine.
      */
     public void reDrawSymbols(){
-        for(Figure f : symbolsFig) f.makeInvisible();
+        for(Figure f : symbolsFig) { 
+            if (f == null) continue;
+            f.makeInvisible();
+        }
         symbolsFig.clear();
         paintSymbols();
         for(Figure f : symbolsFig) {
+            if (f == null) continue;
             wait(200);
             f.makeVisible();
         }
+    }
+
+    /**
+     * Redraw the symbol of a given wheel in a given position.
+     * @param wh The wheel to redraw the symbol
+     * @param pos The position of the wheel in the slot machine
+     */
+    public void reDrawSymbol(Wheel wh, int pos){
+        double numWh = wheels.size();
+        double length = WIDTH_CANVAS - 5;
+        double lenSection = length/numWh;
+
+        Figure previousFg = symbolsFig.get(pos);
+        wait(200);
+        previousFg.makeInvisible();
+
+        Symbol newSym = wh.getShownSymbol();
+        Figure newFg = newSym.getShape();
+
+        newFg.changeColor(newSym.getColor());
+        newFg.changeSize(40);
+
+        double x =  (2 + lenSection*pos)*TILE + ((lenSection*TILE) - 40)/2;
+        int xFinal = (int) x;
+
+        newFg.changePosition(xFinal, 2*TILE + 10);
+        symbolsFig.set(pos, newFg);
+        newFg.makeVisible();
     }
 
     /**
@@ -156,6 +192,7 @@ public class PaintSlotMachine {
         for (int i = 0; i < numWh; i++) {
             Symbol symb = wheels.get(i).getShownSymbol();
             if (symb == null || symb.getShape() == null) {
+                symbolsFig.add(null);
                 continue;
             }
             Figure shp = symb.getShape();
@@ -207,7 +244,10 @@ public class PaintSlotMachine {
     private void eraseMachine(){
         for(Figure f : machineFig) f.makeInvisible(); // hace inivisible la maquina
         for(Figure f : leverFig) f.makeInvisible(); // hace invisible la palanca
-        for(Figure f : symbolsFig) f.makeInvisible(); // hace invisible las simbolos
+        for(Figure f : symbolsFig) { // hace invisible las simbolos
+            if (f == null) continue;
+            f.makeInvisible();
+        } 
         for(Figure f : wheelsFig) f.makeInvisible(); // hace invisible las ruedas de la maquina
     }
 

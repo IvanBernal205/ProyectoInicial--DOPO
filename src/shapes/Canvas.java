@@ -140,6 +140,44 @@ public class Canvas{
             graphic.setColor(new Color(171, 159, 32));
         else if (colorString.equals("purple"))
             graphic.setColor(new Color(119, 18, 153));
+        else if (colorString.equals("cyan"))
+            graphic.setColor(Color.cyan);
+        else if (colorString.equals("teal"))
+            graphic.setColor(new Color(0, 128, 128));
+        else if (colorString.equals("navy"))
+            graphic.setColor(new Color(0, 0, 128));
+        else if (colorString.equals("maroon"))
+            graphic.setColor(new Color(128, 0, 0));
+        else if (colorString.equals("olive"))
+            graphic.setColor(new Color(128, 128, 0));
+        else if (colorString.equals("silver"))
+            graphic.setColor(new Color(192, 192, 192));
+        else if (colorString.equals("crimson"))
+            graphic.setColor(new Color(220, 20, 60));
+        else if (colorString.equals("coral"))
+            graphic.setColor(new Color(255, 127, 80));
+        else if (colorString.equals("tomato"))
+            graphic.setColor(new Color(255, 99, 71));
+        else if (colorString.equals("salmon"))
+            graphic.setColor(new Color(250, 128, 114));
+        else if (colorString.equals("indigo"))
+            graphic.setColor(new Color(75, 0, 130));
+        else if (colorString.equals("violet"))
+            graphic.setColor(new Color(238, 130, 238));
+        else if (colorString.equals("plum"))
+            graphic.setColor(new Color(221, 160, 221));
+        else if (colorString.equals("orchid"))
+            graphic.setColor(new Color(218, 112, 214));
+        else if (colorString.equals("turquoise"))
+            graphic.setColor(new Color(64, 224, 208));
+        else if (colorString.equals("khaki"))
+            graphic.setColor(new Color(240, 230, 140));
+        else if (colorString.equals("beige"))
+            graphic.setColor(new Color(245, 245, 220));
+        else if (colorString.equals("lavender"))
+            graphic.setColor(new Color(230, 230, 250));
+        else if (colorString.equals("tan"))
+            graphic.setColor(new Color(210, 180, 140));
         else  graphic.setColor(Color.pink);
     }
 
