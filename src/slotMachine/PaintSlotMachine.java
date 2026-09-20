@@ -107,7 +107,7 @@ public class PaintSlotMachine {
         double lenSection = length/numWh;
 
         Figure previousFg = symbolsFig.get(pos);
-        wait(200);
+        wait(60);
         previousFg.makeInvisible();
 
         Symbol newSym = wh.getShownSymbol();

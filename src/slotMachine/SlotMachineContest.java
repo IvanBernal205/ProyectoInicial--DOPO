@@ -11,7 +11,6 @@ import java.util.ArrayList;
 public class SlotMachineContest
 {
     private SlotMachine sm;
-    SlotMachine stm;
     /**
      * Solves the slot machine contest for a given number of wheels.
      * @param n The number of wheels and symbols in the slot machine.
@@ -19,7 +18,6 @@ public class SlotMachineContest
      */
     public int[][] solve(int n){
         sm = new SlotMachine(n);
-        String[] g = sm.configuration();
         ArrayList<int[]> solution = new ArrayList<>();
 
         for(int i = 1; i<n; i++){
@@ -91,166 +89,6 @@ public class SlotMachineContest
             sm.spin(solution[i][0], solution[i][1]);
         }
         sm.isJackpot();
-    }
-
-    public int[][] solve2(int n){ 
-        SlotMachine sm = new SlotMachine (n);
-        //sm.makeVisible();
-        stm = sm;
-        
-        int k;
-        int steps = 0;
-        ArrayList <int []> solution = new ArrayList<>();
-        
-        //Parte 1 Disminuir k hasta 2
-        
-        k = sm.distinctSymbols();
-        while (k > 2){ //Se repite hasta que k baje a 2
-            
-            for (int i = 1; i <= n ; i++){ //girar las n ruedas
-                steps = 0;
-                
-                while(steps < n && sm.distinctSymbols() >= k ){//girar 1 rueda n veces o hasta que disminuya k
-                    sm.spin(i, 1);
-                    steps++;
-                    if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]);
-                }
-                if (steps < n) solution.add(new int[]{i,steps});
-                if (sm.distinctSymbols() < k)break;//si disminuye k, el proceso se vuelve a hacer desde el comienzo
-            }
-            
-            if (sm.distinctSymbols() < k){
-                k = sm.distinctSymbols();
-                continue;
-            }
-            
-            if(sm.distinctSymbols() == k){//no hubo la posibilidad de disminuir k
-                int kBefore = k;
-                int positionDif = 1;
-                steps = 0;
-                
-                for (int j = 1; j <= n ; j++){//se debe aumentar k para realizar verificaciones
-                    sm.spin(positionDif,1); 
-                    if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]);
-                    
-                    if (sm.distinctSymbols() > kBefore){
-                        steps = j;
-                        kBefore = sm.distinctSymbols();
-                        break;
-                    }
-                }
-                solution.add(new int[]{positionDif, steps});
-                
-                if (positionDif != 0){
-                    for (int i = 1; i <= n; i++){
-                        if (i == positionDif) continue;
-                        
-                        sm.spin(i, steps);
-                        if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]);
-                        
-                        if(sm.distinctSymbols() == kBefore){ 
-                            solution.add(new int[]{i,steps});
-                            //Son la misma posicion
-                        }
-                        else if(sm.distinctSymbols() < kBefore){ //disminuye
-                            k = sm.distinctSymbols();
-                            solution.add(new int[]{i,steps});
-                            break;
-                        }
-                        else if(sm.distinctSymbols() > kBefore){ //eran diferentes
-                            sm.spin(i, -steps);
-                            break;
-                        }
-                    }
-                }   
-            }
-            k = sm.distinctSymbols();
-        }
-        
-        //Parte 2 k=2 Hallar iguales
-        int distance = 0;
-        for (int i = 1; i <= n; i++){ //Hallar los pasos para simbolo que no esta
-            sm.spin(1, 1);
-            steps = i;
-            if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]);
-            if (sm.distinctSymbols() == 2){
-                distance = i;
-                break;
-            }
-        }
-        
-        sm.spin(1, -distance);
-        int distanceBetween = 0;
-        
-        for (int possible = 1; possible < n ; possible++){
-            if(possible != distance && possible != n-distance){
-                distanceBetween = possible;
-                break;
-            }
-        }
-        
-        if (distanceBetween == 0) {
-            distanceBetween = 1;
-        }
-        
-        sm.spin(1, distanceBetween);
-        if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]);
-        
-        steps = distanceBetween;
-        solution.add(new int[]{1, steps});
-        
-        int kBefore = sm.distinctSymbols();
-        ArrayList<Integer> sameSymbols = new ArrayList<Integer>();
-        for (int i = 2; i <= n; i++){
-            sm.spin(i, steps);
-            if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]) ;
-            if (sm.distinctSymbols() == kBefore){ //son iguales
-                sameSymbols.add(i);
-                solution.add(new int[]{i, steps});
-                sm.spin(i, -steps);
-            }
-            else{ //son diferentes
-                sm.spin(i, -steps);
-                if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]) ;
-            }
-        }
-        //Ya se identificaron simbolos iguales
-        sm.spin(1, -steps); 
-        if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]);
-        
-        //Parte 3 
-        for (int i = 1; i <= n; i++){
-            sm.spin(1,1);
-            steps = i;
-            if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]) ;
-            if (sm.distinctSymbols() == 2) break;
-        }//se hallo la distancia entre los simbolos restantes
-        solution.add(new int[]{1,steps});
-        
-        for (int wheel : sameSymbols){
-            sm.spin(wheel, steps);
-            if (sm.distinctSymbols() == 1)return solution.toArray(new int[0][]) ;
-            solution.add(new int[]{wheel,steps}); 
-        }
-        
-        return solution.toArray(new int[0][]);
-    }
- 
-    public void simulate2(int n){
-        int[][] solution = solve2(n);
-        if (solution == null) return;
-        int t = solution.length; 
-        
-        for (int i = 0; i < t; i++) {
-            stm.spin(solution[t - i - 1][0], -solution[t - i - 1][1]);
-        }
-    
-        stm.makeVisible();
-        
-        for (int i = 0; i < t; i++) {
-            stm.spin(solution[i][0], solution[i][1]);
-        }
-    
-        stm.isJackpot();
+        sm.makeInvisible();
     }
 }
