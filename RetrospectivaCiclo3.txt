@@ -1,0 +1,36 @@
+##RETROSPECTIVA
+
+1. ¿Cuáles fueron los mini-ciclos definidos? Justifíquenlos.
+Ciclo1: Hallar la lógica necesaria para resolver el problema.
+Ciclo2: Realizar todo tipo de pruebas que pudieran fallar.
+Ciclo3: Diseñar el código basado en la solución planteada.
+Ciclo4: Codificar la solución.
+
+2. ¿Cuál es el estado actual del proyecto en términos de mini-ciclos? ¿por qué?
+Los mini-ciclos fueron completados en su totalidad.
+
+3. ¿Cuál fue el tiempo total invertido por cada uno de ustedes? (Horas/Hombre)
+Iván Bernal: 7 horas
+Santiago Malaver: 7 horas
+
+4. ¿Cuál consideran fue el mayor logro? ¿Por qué?
+Nuestro mayor logro aparte de conseguir resolver el problema del proyecto, fue saberlo plasmar de manera adecuada en el código; ya que a pesar de costarnos un poco, conseguimos hacerlo. 
+
+5. ¿Cuál consideran que fue el mayor problema técnico? ¿Qué hicieron para resolverlo?
+Nuestro mayor problema técnico fue llegar a la lógica correcta para resolver el ejercicio, ya que muchas ideas se dejaron de lado debido a los casos borde.
+Para resolverlo, perfeccionamos poco a poco la estrategia principal.
+
+6. ¿Qué hicieron bien como equipo? ¿Qué se comprometen a hacer para mejorar los resultados?
+Como equipo supimos comunicar y escuchar las ideas para finalmente aplicar y poner en practica la que consideramos mejor.
+Nos comprometemos a manejar de una forma mas adecuada el tiempo y la distribución de los mini ciclos.
+
+7. Considerando las prácticas XP incluidas en los laboratorios. ¿cuál fue la más útil? ¿por qué?
+The cost must be written to agreed standards, fue la que tuvimos en cuenta durante todo momento, para comprender los estándares requeridos en la industria y ponerlos en práctica.
+
+
+8. ¿Qué referencias usaron? ¿Cuál fue la más útil? Incluyan citas con estándares adecuados.
+
+-W3Schools. CSS Colors. https://www.w3schools.com/css/css_colors.asp
+-Oracle. Class ArrayList, Java Platform SE API Specification. https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html
+
+La más útil fue W3Schools, ya que nos permitió complementar de manera adecuada el diseño de los símbolos para las pruebas que se necesitaban realizar.
