@@ -178,6 +178,44 @@ public class Canvas{
             graphic.setColor(new Color(230, 230, 250));
         else if (colorString.equals("tan"))
             graphic.setColor(new Color(210, 180, 140));
+        else if (colorString.equals("aquamarine"))
+            graphic.setColor(new Color(127, 255, 212));
+        else if (colorString.equals("chocolate"))
+            graphic.setColor(new Color(210, 105, 30));
+        else if (colorString.equals("darkgreen"))
+            graphic.setColor(new Color(0, 100, 0));
+        else if (colorString.equals("darkred"))
+            graphic.setColor(new Color(139, 0, 0));
+        else if (colorString.equals("dodgerblue"))
+            graphic.setColor(new Color(30, 144, 255));
+        else if (colorString.equals("forestgreen"))
+            graphic.setColor(new Color(34, 139, 34));
+        else if (colorString.equals("goldenrod"))
+            graphic.setColor(new Color(218, 165, 32));
+        else if (colorString.equals("hotpink"))
+            graphic.setColor(new Color(255, 105, 180));
+        else if (colorString.equals("limegreen"))
+            graphic.setColor(new Color(50, 205, 50));
+        else if (colorString.equals("midnightblue"))
+            graphic.setColor(new Color(25, 25, 112));
+        else if (colorString.equals("peru"))
+            graphic.setColor(new Color(205, 133, 63));
+        else if (colorString.equals("royalblue"))
+            graphic.setColor(new Color(65, 105, 225));
+        else if (colorString.equals("seagreen"))
+            graphic.setColor(new Color(46, 139, 87));
+        else if (colorString.equals("sienna"))
+            graphic.setColor(new Color(160, 82, 45));
+        else if (colorString.equals("skyblue"))
+            graphic.setColor(new Color(135, 206, 235));
+        else if (colorString.equals("slateblue"))
+            graphic.setColor(new Color(106, 90, 205));
+        else if (colorString.equals("steelblue"))
+            graphic.setColor(new Color(70, 130, 180));
+        else if (colorString.equals("thistle"))
+            graphic.setColor(new Color(216, 191, 216));
+        else if (colorString.equals("wheat"))
+            graphic.setColor(new Color(245, 222, 179));
         else  graphic.setColor(Color.pink);
     }
 

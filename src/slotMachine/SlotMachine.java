@@ -14,11 +14,15 @@ public class SlotMachine
 {
     // CSS colors
     private static final Set<String> CSS_COLORS = new HashSet<>(Arrays.asList(
-        "beige", "black", "blue", "brown", "coral", "crimson", "cyan",
-        "gold", "gray", "green", "indigo", "khaki", "lavender", "magenta",
-        "maroon", "navy", "olive", "orange", "orchid", "pink", "plum",
-        "purple", "red", "salmon", "silver", "tan", "teal", "tomato",
-        "turquoise", "violet", "yellow"));
+        "aquamarine", "beige", "black", "blue", "brown", "chocolate",
+        "coral", "crimson", "cyan", "darkgreen", "darkred", "dodgerblue",
+        "forestgreen", "gold", "goldenrod", "gray", "green", "hotpink",
+        "indigo", "khaki", "lavender", "limegreen", "magenta", "maroon",
+        "midnightblue", "navy", "olive", "orange", "orchid", "peru",
+        "pink", "plum", "purple", "red", "royalblue", "salmon",
+        "seagreen", "sienna", "silver", "skyblue", "slateblue",
+        "steelblue", "tan", "teal", "thistle", "tomato", "turquoise",
+        "violet", "wheat", "yellow"));
 
     private ArrayList<Wheel> wheels;
     private ArrayList<Symbol> symbols;
