@@ -52,7 +52,7 @@ public class SlotMachine
      * Add a wheel to the slot machine in a specific position. 
      * @param pos The position where the wheel will be added.
      */
-    public void addWheel(int pos){
+    public void addWheel(String type, int pos){
         ok = false;
         
         if (pos > wheels.size() && !wheels.isEmpty()){
@@ -62,8 +62,25 @@ public class SlotMachine
         else{
         pos = normalizePosWheel(pos);
         }
-        Wheel wh = new Wheel();
-        wheels.add(pos, wh);
+        
+        Wheel wh =  null;
+        switch(type.toLowerCase()){
+            case "normal":
+                wh = new Wheel();
+                break;
+            case "lefty":
+                Wheel leftWheel = null;
+                if (pos > 0){ //Si hay algo a la izquierda
+                    leftWheel = wheels.get(pos - 1);
+                }
+                wh = new Lefty(leftWheel);
+                break;
+            case "rebel":
+                wh = new Rebel();
+                break;
+        }
+        
+        if (wh != null) wheels.add(pos, wh);
         
         if(isVisible) psm.reDraw();
         ok = true;
@@ -79,9 +96,14 @@ public class SlotMachine
             messageForUser("No puedes eliminar una rueda porque aún no creas ninguna.");
             return;
         }
-        
         pos = normalizePosWheel(pos);
+        
+        Wheel wh = wheels.get(pos);
+        if (wh.isLocked()) return;
+        if (!wh.isDeleted()) return;
+        
         wheels.remove(pos);
+        updateLeftWheels();
         if(isVisible) psm.reDraw();
 
         ok = true;
@@ -104,9 +126,10 @@ public class SlotMachine
         wheel2 = normalizePosWheel(wheel2);
         
         if (wheel1 == wheel2) return;
-        
         Wheel firstWheel = wheels.get(wheel1);
         Wheel secondWheel = wheels.get(wheel2);
+        
+        if(!firstWheel.isSwapped() || !secondWheel.isSwapped()) return;
         
         wheels.set(wheel2, firstWheel);
         wheels.set(wheel1, secondWheel);
@@ -233,7 +256,7 @@ public class SlotMachine
 
         wheel = normalizePosWheel(wheel);
         Wheel wh = wheels.get(wheel);
-        if(wh.getLocked()) {
+        if(wh.isLocked()) {
             messageForUser("La rueda esta bloqueada no se puede actualizar");
             return;
         }
@@ -274,7 +297,7 @@ public class SlotMachine
         Wheel wh = wheels.get(wheel);
         Symbol actualSymb = wh.getShownSymbol();
 
-        if (actualSymb == null || wh.getLocked()){ // Si esta fijo, no cambia de simbolo
+        if (actualSymb == null || wh.isLocked()){ // Si esta fijo, no cambia de simbolo
             ok = true;
             return;            
         }
@@ -307,7 +330,7 @@ public class SlotMachine
         int pos = normalizePosWheel(wheel);
         Wheel wh = wheels.get(pos);
         
-        if (wh.getLocked()) return;
+        if (wh.isLocked()) return;
         
         int movement = (steps > 0) ? 1 : -1;
         int size = symbols.size();
@@ -330,7 +353,7 @@ public class SlotMachine
     /**
      * Set the machine in a given combination.
      * @param setSymbols An array with the colors that represent the configuration 
-     * of the machine that will be set 
+     * of the machine that will be set
      */
     public void spin(String[] setSymbols){
         ok = false;
@@ -344,7 +367,7 @@ public class SlotMachine
 
         for (int i = 0; i < wheels.size(); i++){
             wh = wheels.get(i);
-            if(wh.getLocked()) continue; // si la rueda esta bloqueada no cambia
+            if(wh.isLocked()) continue; // si la rueda esta bloqueada no cambia
             
             color = setSymbols[i];
             if (existColor(color)){
@@ -626,5 +649,16 @@ public class SlotMachine
 
     public  ArrayList<Wheel> getWheels(){
         return wheels;
+    }
+    
+    private void updateLeftWheels(){
+        for (int i = 0; i < wheels.size(); i++){
+            Wheel wh = wheels.get(i);
+            if(wh instanceof Lefty){
+                Lefty lf = (Lefty) wh;
+                if(i == 0) lf.setLeftWh(null);
+                if(i != 0) lf.setLeftWh(wheels.get(i - 1));
+            }
+        }
     }
 }
