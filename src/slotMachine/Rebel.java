@@ -2,13 +2,17 @@ package slotMachine;
 
 
 /**
- * 
+ * Creates a wheel that doesn't allow to get locked, swap, and neither delete.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author César Santiago Malaver Garnica
+ * @author Ivan Andres Bernal Sabogal
+ * @version 03/10/2026
  */
 public class Rebel extends Wheel{
     
+    /**
+     * Create a new Rebel wheel with it's values
+     */
     public Rebel(){
         locked = false;
         enableSwap = false;

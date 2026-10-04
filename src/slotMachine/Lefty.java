@@ -2,10 +2,11 @@ package slotMachine;
 
 
 /**
- * Write a description of class Lefty here.
+ * Creates a wheel that copy the state of it's left neighbour wheel
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author César Santiago Malaver Garnica
+ * @author Ivan Andres Bernal Sabogal
+ * @version 03/10/2026
  */
 public class Lefty extends Wheel{
     private Wheel leftWh; 

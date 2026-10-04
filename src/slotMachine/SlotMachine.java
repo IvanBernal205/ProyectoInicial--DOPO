@@ -49,7 +49,8 @@ public class SlotMachine
     }
 
     /**
-     * Add a wheel to the slot machine in a specific position. 
+     * Add a wheel to the slot machine in a specific position.
+     * @param type The type of the wheel that will be added.
      * @param pos The position where the wheel will be added.
      */
     public void addWheel(String type, int pos){
@@ -650,7 +651,9 @@ public class SlotMachine
     public  ArrayList<Wheel> getWheels(){
         return wheels;
     }
-    
+    /**
+     * Update the reference of the wheel that is at left of a lefty wheel
+     */
     private void updateLeftWheels(){
         for (int i = 0; i < wheels.size(); i++){
             Wheel wh = wheels.get(i);
