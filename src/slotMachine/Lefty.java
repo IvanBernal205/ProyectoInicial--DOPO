@@ -29,4 +29,8 @@ public class Lefty extends Wheel{
     public void setLeftWh(Wheel wh){
         leftWh = wh;
     }
+    
+    public Wheel getLeftWh(){
+        return leftWh;
+    }
 }
