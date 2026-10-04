@@ -16,7 +16,6 @@ public class PaintSlotMachine {
     private static final int TILE = 60;
     private static final int HEIGHT_CANVAS = 5; //  5*60 = 300
     private static final int WIDTH_CANVAS = 23; //  23*60 = 1380
-    private static final int MARK_GAP = 3; // separacion entre la figura y su marca
     private boolean visible = false;
     private boolean winning = false;
     private ArrayList<Wheel> wheels;
@@ -151,8 +150,7 @@ public class PaintSlotMachine {
         int y = 2*TILE + (TILE - sz)/2;
         shp.changePosition((int) x, y);
 
-        Figure mark = symb.getMark();
-        if (mark != null) mark.changePosition((int) x, y + sz + MARK_GAP);
+        symb.placeMark((int) x, y); // cada simbolo ubica su propia marca
     }
 
     /**

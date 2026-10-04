@@ -96,6 +96,15 @@ public class Symbol {
     }
 
     /**
+     * Move the mark of the symbol to its place, given where its figure is drawn.
+     * A normal symbol has no mark, so it does nothing.
+     * @param x The horizontal position of the figure, in pixels
+     * @param y The vertical position of the figure, in pixels
+     */
+    public void placeMark(int x, int y){
+    }
+
+    /**
      * Indicate if the symbol must be drawn on its wheel.
      * A normal symbol is always drawn.
      * @return true if the symbol is drawn, false if it is hidden

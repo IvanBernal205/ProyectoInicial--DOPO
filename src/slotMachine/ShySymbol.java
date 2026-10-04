@@ -13,6 +13,7 @@ import shapes.Rectangle;
 public class ShySymbol extends Symbol {
     public static final String MARK_COLOR = "black";
     public static final int MARK_HEIGHT = 4;
+    private static final int MARK_GAP = 3; // separacion entre la figura y la barra
     private boolean visible;
     private Figure mark;
 
@@ -63,6 +64,16 @@ public class ShySymbol extends Symbol {
     @Override
     public Figure getMark(){
         return mark;
+    }
+
+    /**
+     * Place the bar just under the figure of the symbol.
+     * @param x The horizontal position of the figure, in pixels
+     * @param y The vertical position of the figure, in pixels
+     */
+    @Override
+    public void placeMark(int x, int y){
+        if (mark != null) mark.changePosition(x, y + size + MARK_GAP);
     }
 
     /**
