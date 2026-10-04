@@ -10,12 +10,16 @@ import java.util.ArrayList;
 
 public class Wheel {
     
-    private Integer symbIndex;
-    private Symbol shownSymbol;
-    private boolean locked;
+    protected Integer symbIndex;
+    protected Symbol shownSymbol;
+    protected boolean locked;
+    protected boolean enableSwap;
+    protected boolean enableDel;
 
     public Wheel(){
         locked = false;
+        enableSwap = true;
+        enableDel = true;
     }
 
 
@@ -81,12 +85,19 @@ public class Wheel {
         return symbIndex;
     }
     
-    //is
-    public boolean getLocked(){
+    public boolean isLocked(){
         return locked;
     }
 
     public void setLocked(boolean isLock){
         this.locked = isLock;
+    }
+    
+    public boolean isSwapped(){
+        return enableSwap;
+    }
+    
+    public boolean isDeleted(){
+        return enableDel;
     }
 }
