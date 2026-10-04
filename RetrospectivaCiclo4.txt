@@ -1,0 +1,39 @@
+##RETROSPECTIVA
+
+1. ¿Cuáles fueron los mini-ciclos definidos? Justifíquenlos.
+Ciclo1: Realizar la reformulación necesaria y el diseño de los nuevos tipos de rueda.
+Ciclo2: Codificar lo definido en el ciclo 1.
+Ciclo3: Realizar la reformulación necesaria y el diseño de los nuevos tipos de símbolos.
+Ciclo4: Codificar lo definido en el ciclo 3.
+Ciclo5: Realizar la reformulación necesaria y el diseño del nuevo elemento.
+Ciclo6: Codificar lo definido en el ciclo 5.
+
+2. ¿Cuál es el estado actual del proyecto en términos de mini-ciclos? ¿por qué?
+Los mini-ciclos fueron completados en su totalidad.
+
+3. ¿Cuál fue el tiempo total invertido por cada uno de ustedes? (Horas/Hombre)
+Iván Bernal: 5 horas
+Santiago Malaver: 5 horas
+
+4. ¿Cuál consideran fue el mayor logro? ¿Por qué?
+Nuestro mayor logro fue conseguir extender el proyecto para implementar lo requerido sin tener que realizar una reformulación amplia, porque es algo que hasta el momento no habíamos realizado.
+
+5. ¿Cuál consideran que fue el mayor problema técnico? ¿Qué hicieron para resolverlo?
+Nuestro mayor problema técnico fue comprender la forma más adecuada de implementar los nuevos cambios, para resolverlo juntamos las mejores ideas que nos surgieron y las pusimos a prueba.
+
+6. ¿Qué hicieron bien como equipo? ¿Qué se comprometen a hacer para mejorar los resultados?
+Como equipo supimos comunicar y escuchar las ideas para finalmente aplicar y poner en practica lo que consideramos mas oportuno.
+Nos comprometemos a manejar de una forma mas adecuada la distribución de los mini ciclos.
+
+7. Considerando las prácticas XP incluidas en los laboratorios. ¿cuál fue la más útil? ¿por qué?
+Refactor whenever and wherever possible fue la practica xp mas útil, ya que para el desarrollo se refactorizaron pequeñas cosas del proyecto en donde fue posible y adecuado.
+
+
+8. ¿Qué referencias usaron? ¿Cuál fue la más útil? Incluyan citas con estándares adecuados.
+
+-W3Schools. CSS Colors. https://www.w3schools.com/css/css_colors.asp
+-Oracle. Class ArrayList, Java Platform SE API Specification. https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html
+-Geek. https://ifgeekthen.nttdata.com/s/post/que-es-y-como-utilizar-instanceof-en-java-MCGKP3Z2V77RD4ZKVJYG3ABC5CB4?language=es
+
+
+La más útil fue la ultima, ya que el uso de instanceof, nos resultó bastante útil.
