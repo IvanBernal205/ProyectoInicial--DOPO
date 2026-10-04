@@ -53,6 +53,18 @@ public class Wheel {
     }
 
     /**
+     * Show a symbol based on the index at symbols list
+     * @param index The index of the symbol that will be shown
+     * @param state The state of the symbol that will be shown
+     */
+    protected void showStateOf(int index, Symbol state){
+        Symbol own = state.copy();
+        ownSymbols.put(state.getColor(), own);
+        this.symbIndex = index;
+        this.shownSymbol = own;
+    }
+
+    /**
      * Forget a symbol that was deleted
      * @param color The color of the symbol that will be forgotten
      */

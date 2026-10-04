@@ -207,7 +207,8 @@ public class SlotMachine
 
     /**
      * Add a symbol of a given type in a specific position in order to be used later.
-     * @param type The type of the symbol: "normal", "ephemeral" or "shy"
+     * @param type The type of the symbol: "normal", "ephemeral" or "shy".
+     * An unknown type creates a normal symbol
      * @param pos The position where you want to add the symbol
      * @param color The color of the symbol
      */
@@ -681,12 +682,13 @@ public class SlotMachine
 
     /**
      * Create a symbol of a given type.
+     * An unknown type creates a normal symbol.
      * @param type The type of the symbol: "normal", "ephemeral" or "shy"
      * @param color The color of the symbol
-     * @return The new symbol, or null if the type is not valid
+     * @return The new symbol
      */
     private Symbol createSymbol(String type, String color){
-        if (type == null) return null;
+        if (type == null) return new Symbol(color);
         switch (type.trim().toLowerCase()) {
             case "normal":
                 return new Symbol(color);

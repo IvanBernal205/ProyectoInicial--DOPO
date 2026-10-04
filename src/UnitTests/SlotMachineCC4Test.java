@@ -107,9 +107,82 @@ public class SlotMachineCC4Test
         
         assertEquals(left, tested.getLeftWh());
         
-        assertEquals(left.getShownSymbol(), tested.getShownSymbol());
+        assertEquals(left.getShownSymbol().getColor(), tested.getShownSymbol().getColor());
     }
-    
+
+    @Test
+    public void shouldShrinkEphemeralWhenItLandsBySpin(){
+        SlotMachine sm = new SlotMachine();
+        sm.addSymbol("ephemeral", 1, "red");
+        sm.addSymbol("normal", 2, "blue");
+        sm.addWheel(1);
+        sm.placeSymbol(1, "red");
+
+        assertEquals(38, sm.getWheels().get(0).getShownSymbol().getSize());
+
+        sm.spin(1); // red -> blue
+        sm.spin(1); // blue -> red
+
+        assertEquals("red", sm.configuration()[0]);
+        assertEquals(30, sm.getWheels().get(0).getShownSymbol().getSize());
+    }
+
+    @Test
+    public void shouldNotShrinkEphemeralBelowMinimum(){
+        SlotMachine sm = new SlotMachine();
+        sm.addSymbol("ephemeral", 1, "red");
+        sm.addSymbol("normal", 2, "blue");
+        sm.addWheel(1);
+        sm.placeSymbol(1, "red");
+
+        for (int i = 0; i < 30; i++){
+            sm.spin(1);
+            assertTrue(sm.getWheels().get(0).getShownSymbol().getSize() >= 4);
+        }
+
+        assertEquals("red", sm.configuration()[0]);
+        assertEquals(4, sm.getWheels().get(0).getShownSymbol().getSize());
+    }
+
+    @Test
+    public void shouldToggleShyEachTimeItLandsBySpin(){
+        SlotMachine sm = new SlotMachine();
+        sm.addSymbol("shy", 1, "green");
+        sm.addSymbol("normal", 2, "blue");
+        sm.addWheel(1);
+        sm.placeSymbol(1, "green");
+
+        assertTrue(sm.getWheels().get(0).getShownSymbol().isVisible());
+
+        sm.spin(1); // green -> blue
+        sm.spin(1); // blue -> green: oculto
+        assertEquals("green", sm.configuration()[0]);
+        assertFalse(sm.getWheels().get(0).getShownSymbol().isVisible());
+
+        sm.spin(1);
+        sm.spin(1); // vuelve a green: visible
+        assertTrue(sm.getWheels().get(0).getShownSymbol().isVisible());
+    }
+
+    @Test
+    public void shouldKeepHiddenShyInLogic(){
+        SlotMachine sm = new SlotMachine();
+        sm.addSymbol("shy", 1, "green");
+        sm.addSymbol("normal", 2, "blue");
+        sm.addWheel(1);
+        sm.addWheel(2);
+        sm.placeSymbol(1, "green");
+        sm.placeSymbol(2, "green");
+
+        sm.spin(1);
+        sm.spin(1); // la primera rueda muestra green oculto
+
+        assertFalse(sm.getWheels().get(0).getShownSymbol().isVisible());
+        assertArrayEquals(new String[]{"green", "green"}, sm.configuration());
+        assertEquals(1, sm.distinctSymbols());
+        assertTrue(sm.isJackpot());
+    }
+
     /**
      * Tears down the test fixture.
      *
