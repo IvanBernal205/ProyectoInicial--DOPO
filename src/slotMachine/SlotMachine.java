@@ -532,20 +532,17 @@ public class SlotMachine
         }
         
         boolean jackpot = true;
-        Symbol firstSymbol = wheels.get(0).getShownSymbol();
+        String firstColor = null; // color del primer simbolo que no es comodin
 
-        if(firstSymbol == null){
-            jackpot = false;
-        }
-        else{
-            String firstColor = firstSymbol.getColor();
+        for (int i = 0; i < wheels.size() && jackpot; i++){
+            Symbol actualSymbol = wheels.get(i).getShownSymbol();
 
-            for (int i = 1; i < wheels.size() && jackpot ; i++){
-                Symbol actualSymbol = wheels.get(i).getShownSymbol();
-
-                if (actualSymbol == null || !firstColor.equals(actualSymbol.getColor())){
-                    jackpot = false;
-                }
+            if (actualSymbol == null){
+                jackpot = false;
+            }
+            else if (!actualSymbol.isComodin()){
+                if (firstColor == null) firstColor = actualSymbol.getColor();
+                else if (!firstColor.equals(actualSymbol.getColor())) jackpot = false;
             }
         }
 
@@ -696,6 +693,8 @@ public class SlotMachine
                 return new EphemeralSymbol(color);
             case "shy":
                 return new ShySymbol(color);
+            case "comodin":
+                return new ComodinSymbol(color);
             default:
                 return new Symbol(color);
         }

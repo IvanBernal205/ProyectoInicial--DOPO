@@ -103,4 +103,13 @@ public class Symbol {
     public boolean isVisible(){
         return true;
     }
+
+    /**
+     * Indicate if the symbol is a comodin.
+     * A normal symbol is not a comodin.
+     * @return true if the symbol is a comodin, false otherwise
+     */
+    public boolean isComodin(){
+        return false;
+    }
 }

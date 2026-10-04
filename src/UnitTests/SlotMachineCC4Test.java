@@ -183,6 +183,37 @@ public class SlotMachineCC4Test
         assertTrue(sm.isJackpot());
     }
 
+    @Test
+    public void shouldBeJackpotWithComodinInAnyWheel(){
+        SlotMachine sm = new SlotMachine();
+        sm.addSymbol("comodin", 1, "gold");
+        sm.addSymbol("normal", 2, "red");
+        sm.addWheel(1);
+        sm.addWheel(2);
+        sm.addWheel(3);
+        sm.placeSymbol(1, "gold");
+        sm.placeSymbol(2, "red");
+        sm.placeSymbol(3, "red");
+
+        assertTrue(sm.isJackpot());
+    }
+
+    @Test
+    public void shouldNotBeJackpotWithComodinAndDifferentSymbols(){
+        SlotMachine sm = new SlotMachine();
+        sm.addSymbol("comodin", 1, "gold");
+        sm.addSymbol("normal", 2, "red");
+        sm.addSymbol("normal", 3, "blue");
+        sm.addWheel(1);
+        sm.addWheel(2);
+        sm.addWheel(3);
+        sm.placeSymbol(1, "red");
+        sm.placeSymbol(2, "gold");
+        sm.placeSymbol(3, "blue");
+
+        assertFalse(sm.isJackpot());
+    }
+
     /**
      * Tears down the test fixture.
      *

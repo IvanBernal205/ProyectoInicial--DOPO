@@ -43,5 +43,12 @@ public class Presentacion
         sm.spin();
         sm.isJackpot();
 
+        sm.addSymbol("comodin", 5, "green");
+        sm.spin(4, 2);
+        sm.isJackpot();
+        sm.spin(4,1);
+        sm.isJackpot();
+
+        
     }
 }
