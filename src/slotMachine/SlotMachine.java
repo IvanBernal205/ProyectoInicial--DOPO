@@ -54,7 +54,7 @@ public class SlotMachine
      */
     public void addWheel(int pos){
         ok = false;
-        
+
         if (pos > wheels.size() && !wheels.isEmpty()){
             pos = normalizePosWheel(pos);
             pos ++;
@@ -64,6 +64,47 @@ public class SlotMachine
         }
         Wheel wh = new Wheel();
         wheels.add(pos, wh);
+        updateLeftWheels();
+        
+        if(isVisible) psm.reDraw();
+        ok = true;
+    }
+
+    /**
+     * Add a wheel to the slot machine in a specific position.
+     * @param type The type of the wheel that will be added.
+     * @param pos The position where the wheel will be added.
+     */
+    public void addWheel(String type, int pos){
+        ok = false;
+        
+        if (pos > wheels.size() && !wheels.isEmpty()){
+            pos = normalizePosWheel(pos);
+            pos ++;
+        } 
+        else{
+        pos = normalizePosWheel(pos);
+        }
+        
+        Wheel wh =  null;
+        switch(type.toLowerCase()){
+            case "normal":
+                wh = new Wheel();
+                break;
+            case "lefty":
+                Wheel leftWheel = null;
+                if (pos > 0){ //Si hay algo a la izquierda
+                    leftWheel = wheels.get(pos - 1);
+                }
+                wh = new Lefty(leftWheel);
+                break;
+            case "rebel":
+                wh = new Rebel();
+                break;
+        }
+        
+        if (wh != null) wheels.add(pos, wh);
+        updateLeftWheels();
         
         if(isVisible) psm.reDraw();
         ok = true;
@@ -79,9 +120,14 @@ public class SlotMachine
             messageForUser("No puedes eliminar una rueda porque aún no creas ninguna.");
             return;
         }
-        
         pos = normalizePosWheel(pos);
+        
+        Wheel wh = wheels.get(pos);
+        if (wh.isLocked()) return;
+        if (!wh.isDeleted()) return;
+        
         wheels.remove(pos);
+        updateLeftWheels();
         if(isVisible) psm.reDraw();
 
         ok = true;
@@ -104,12 +150,14 @@ public class SlotMachine
         wheel2 = normalizePosWheel(wheel2);
         
         if (wheel1 == wheel2) return;
-        
         Wheel firstWheel = wheels.get(wheel1);
         Wheel secondWheel = wheels.get(wheel2);
         
+        if(!firstWheel.isSwapped() || !secondWheel.isSwapped()) return;
+        
         wheels.set(wheel2, firstWheel);
         wheels.set(wheel1, secondWheel);
+        updateLeftWheels();
         if (isVisible) psm.reDraw();    
         ok = true;
     }
@@ -154,6 +202,17 @@ public class SlotMachine
      * @param color The color of the symbol
      */
     public void addSymbol(int pos, String color){
+        addSymbol("normal", pos, color);
+    }
+
+    /**
+     * Add a symbol of a given type in a specific position in order to be used later.
+     * @param type The type of the symbol: "normal", "ephemeral" or "shy".
+     * An unknown type creates a normal symbol
+     * @param pos The position where you want to add the symbol
+     * @param color The color of the symbol
+     */
+    public void addSymbol(String type, int pos, String color){
         ok = false;
         color = normalizeColor(color);
         if (color == null){
@@ -162,10 +221,10 @@ public class SlotMachine
         }
         if (existColor(color)) return;
 
+        Symbol sym = createSymbol(type, color);
+
         pos = normalizePosSym(pos);
-        Symbol sym = new Symbol(color);
         symbols.add(pos, sym);
-        
         for (int i = 0; i < wheels.size(); i++){
             Wheel wh = wheels.get(i);
             
@@ -204,6 +263,7 @@ public class SlotMachine
         }
 
         for (Wheel wh : wheels) {
+            wh.forgetSymbol(symbol);
             // si el simbolo eliminado esta siendo mostrado por alguna
             // rueda entonces se debe actulizar a otro simbolo
             wh.symbolStillExist(symbol, symbols, deletedPos, isVisible);
@@ -233,7 +293,7 @@ public class SlotMachine
 
         wheel = normalizePosWheel(wheel);
         Wheel wh = wheels.get(wheel);
-        if(wh.getLocked()) {
+        if(wh.isLocked()) {
             messageForUser("La rueda esta bloqueada no se puede actualizar");
             return;
         }
@@ -249,7 +309,7 @@ public class SlotMachine
         }
         
         if(symb != null){
-            wh.placeSymbol(i, new Symbol(symb)); 
+            wh.showSymbol(i, symb, false);
             if(isVisible) psm.reDrawSymbol(wh, wheel);
         }else{
             messageForUser("El simbolo que desea asignar no fue añadido previamente");
@@ -274,7 +334,7 @@ public class SlotMachine
         Wheel wh = wheels.get(wheel);
         Symbol actualSymb = wh.getShownSymbol();
 
-        if (actualSymb == null || wh.getLocked()){ // Si esta fijo, no cambia de simbolo
+        if (actualSymb == null || wh.isLocked()){ // Si esta fijo, no cambia de simbolo
             ok = true;
             return;            
         }
@@ -282,9 +342,8 @@ public class SlotMachine
         int actualIndex = wh.getSymbIndex();
         int nextIndex = (actualIndex+1)%symbols.size();
         
-        Symbol s = symbols.get(nextIndex);
-        wh.placeSymbol(nextIndex, new Symbol(s));
-        
+        wh.showSymbol(nextIndex, symbols.get(nextIndex), true);
+
         if(isVisible){
             // Cuando se usa spin() se repinta cada qe una rueda gira y se ve raro.
             psm.reDrawSymbol(wh, wheel); //estaba sin el Symbols del final
@@ -307,18 +366,19 @@ public class SlotMachine
         int pos = normalizePosWheel(wheel);
         Wheel wh = wheels.get(pos);
         
-        if (wh.getLocked()) return;
-        
+        if (wh.isLocked()){ // Si esta fijo, no cambia de simbolo
+            ok = true;
+            return;
+        }
+
         int movement = (steps > 0) ? 1 : -1;
         int size = symbols.size();
         
         for (int i = 0; i < Math.abs(steps); i++) {
             int actualIndex = wh.getSymbIndex();
             int nextIndex = ((actualIndex + movement) % size + size) % size;
-        
-            Symbol s = symbols.get(nextIndex);
-            wh.placeSymbol(nextIndex, new Symbol(s));
-        
+            wh.showSymbol(nextIndex, symbols.get(nextIndex), true);
+
             if (isVisible) {
                 // Cuando se usa spin() se repinta cada vez que una rueda gira y se ve raro.
                 psm.reDrawSymbol(wh, pos);
@@ -330,7 +390,7 @@ public class SlotMachine
     /**
      * Set the machine in a given combination.
      * @param setSymbols An array with the colors that represent the configuration 
-     * of the machine that will be set 
+     * of the machine that will be set
      */
     public void spin(String[] setSymbols){
         ok = false;
@@ -344,7 +404,7 @@ public class SlotMachine
 
         for (int i = 0; i < wheels.size(); i++){
             wh = wheels.get(i);
-            if(wh.getLocked()) continue; // si la rueda esta bloqueada no cambia
+            if(wh.isLocked()) continue; // si la rueda esta bloqueada no cambia
             
             color = setSymbols[i];
             if (existColor(color)){
@@ -472,20 +532,17 @@ public class SlotMachine
         }
         
         boolean jackpot = true;
-        Symbol firstSymbol = wheels.get(0).getShownSymbol();
+        String firstColor = null; // color del primer simbolo que no es comodin
 
-        if(firstSymbol == null){
-            jackpot = false;
-        }
-        else{
-            String firstColor = firstSymbol.getColor();
+        for (int i = 0; i < wheels.size() && jackpot; i++){
+            Symbol actualSymbol = wheels.get(i).getShownSymbol();
 
-            for (int i = 1; i < wheels.size() && jackpot ; i++){
-                Symbol actualSymbol = wheels.get(i).getShownSymbol();
-
-                if (actualSymbol == null || !firstColor.equals(actualSymbol.getColor())){
-                    jackpot = false;
-                }
+            if (actualSymbol == null){
+                jackpot = false;
+            }
+            else if (!actualSymbol.isComodin()){
+                if (firstColor == null) firstColor = actualSymbol.getColor();
+                else if (!firstColor.equals(actualSymbol.getColor())) jackpot = false;
             }
         }
 
@@ -616,7 +673,30 @@ public class SlotMachine
             Wheel wh = new Wheel();
             wheels.add(i, wh);
             Symbol symb = symbols.get(randNum);
-            wh.placeSymbol(randNum, new Symbol(symb));
+            wh.showSymbol(randNum, symb, false);
+        }
+    }
+
+    /**
+     * Create a symbol of a given type.
+     * An unknown type creates a normal symbol.
+     * @param type The type of the symbol: "normal", "ephemeral" or "shy"
+     * @param color The color of the symbol
+     * @return The new symbol
+     */
+    private Symbol createSymbol(String type, String color){
+        if (type == null) return new Symbol(color);
+        switch (type.trim().toLowerCase()) {
+            case "normal":
+                return new Symbol(color);
+            case "ephemeral":
+                return new EphemeralSymbol(color);
+            case "shy":
+                return new ShySymbol(color);
+            case "comodin":
+                return new ComodinSymbol(color);
+            default:
+                return new Symbol(color);
         }
     }
 
@@ -626,5 +706,18 @@ public class SlotMachine
 
     public  ArrayList<Wheel> getWheels(){
         return wheels;
+    }
+    /**
+     * Update the reference of the wheel that is at left of a lefty wheel
+     */
+    private void updateLeftWheels(){
+        for (int i = 0; i < wheels.size(); i++){
+            Wheel wh = wheels.get(i);
+            if(wh instanceof Lefty){
+                Lefty lf = (Lefty) wh;
+                if(i == 0) lf.setLeftWh(null);
+                if(i != 0) lf.setLeftWh(wheels.get(i - 1));
+            }
+        }
     }
 }
