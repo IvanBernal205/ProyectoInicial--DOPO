@@ -13,12 +13,14 @@ import shapes.Triangle;
 
 public class Symbol {
     public static final String[] FIGURES = {"triangulo", "rectangulo", "circulo"};
-    private String color;
-    private String selectShape;
-    private Figure shape;
+    public static final int DEFAULT_SIZE = 40;
+    protected String color;
+    protected String selectShape;
+    protected Figure shape;
+    protected int size;
 
     /**
-     * Create a symbol with a given color 
+     * Create a symbol with a given color
      * @param color The color of the symbol what will be created
      */
     public Symbol(String color){
@@ -27,15 +29,18 @@ public class Symbol {
         this.color = color;
         this.shape = null;
         this.selectShape = FIGURES[index];
+        this.size = DEFAULT_SIZE;
     }
 
     /**
-     * Create a symbol based on another one.
-     * @param original A symbol that was already created 
+     * Create a symbol based on another one, with its own figure.
+     * @param original A symbol that was already created
      */
-    public Symbol(Symbol original){
+    protected Symbol(Symbol original){
         this.color = original.color;
-        this.shape = assignFigure(original.selectShape);
+        this.selectShape = original.selectShape;
+        this.size = original.size;
+        this.shape = assignFigure(selectShape);
     }
 
     private Figure assignFigure(String sShape){
@@ -51,6 +56,21 @@ public class Symbol {
         }
     }
 
+    /**
+     * Create a copy of the symbol.
+     * @return A copy of the symbol
+     */
+    public Symbol copy(){
+        return new Symbol(this);
+    }
+
+    /**
+     * Indicate that the symbol was shown on a wheel.
+     * A normal symbol does not change when it is shown.
+     */
+    public void onSpin(){
+    }
+
     public String getColor(){
         return this.color;
     }
@@ -59,4 +79,28 @@ public class Symbol {
         return shape;
     }
 
+    /**
+     * Return the size used to draw the symbol.
+     * @return The size of the symbol
+     */
+    public int getSize(){
+        return size;
+    }
+
+    /**
+     * Return the figure that marks the type of the symbol
+     * @return The mark of the symbol, or null if it has none
+     */
+    public Figure getMark(){
+        return null;
+    }
+
+    /**
+     * Indicate if the symbol must be drawn on its wheel.
+     * A normal symbol is always drawn.
+     * @return true if the symbol is drawn, false if it is hidden
+     */
+    public boolean isVisible(){
+        return true;
+    }
 }

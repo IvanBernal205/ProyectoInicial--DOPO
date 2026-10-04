@@ -1,5 +1,6 @@
 package slotMachine;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A wheel which is on the slot machine and that contains a symbol
@@ -15,6 +16,7 @@ public class Wheel {
     protected boolean locked;
     protected boolean enableSwap;
     protected boolean enableDel;
+    private HashMap<String, Symbol> ownSymbols = new HashMap<>();
 
     public Wheel(){
         locked = false;
@@ -33,10 +35,41 @@ public class Wheel {
         }
     }
     
-    public void setSymbol(Symbol symbol){
-        if (shownSymbol !=null){
-            this.shownSymbol = symbol; 
+    /**
+     * Show a symbol based on the index at symbols list
+     * @param index The index of the symbol that will be shown
+     * @param template The symbol that will be shown
+     * @param spun If the wheel was spun or not
+     */
+    public void showSymbol(int index, Symbol template, boolean spun){
+        Symbol own = ownSymbols.get(template.getColor());
+        if (own == null){
+            own = template.copy();
+            ownSymbols.put(template.getColor(), own);
         }
+        if (spun) own.onSpin();
+        this.symbIndex = index;
+        this.shownSymbol = own;
+    }
+
+    /**
+     * Show a symbol based on the index at symbols list
+     * @param index The index of the symbol that will be shown
+     * @param state The state of the symbol that will be shown
+     */
+    protected void showStateOf(int index, Symbol state){
+        Symbol own = state.copy();
+        ownSymbols.put(state.getColor(), own);
+        this.symbIndex = index;
+        this.shownSymbol = own;
+    }
+
+    /**
+     * Forget a symbol that was deleted
+     * @param color The color of the symbol that will be forgotten
+     */
+    public void forgetSymbol(String color){
+        ownSymbols.remove(color);
     }
 
     /**
@@ -56,22 +89,12 @@ public class Wheel {
             }
             else{
                 int newIndex = deletedPos % symbols.size();
-                placeSymbol(newIndex, new Symbol(symbols.get(newIndex)));
+                showSymbol(newIndex, symbols.get(newIndex), false);
             }
         }
         else if(symbIndex != null && symbIndex > deletedPos){
             symbIndex = symbIndex - 1;
         }
-    }
-
-    /**
-     * Place a symbol on a specific wheel.
-     * @param index The position where the symbol will be added
-     * @param newSymbol The symbol that will be added
-     */
-    public void placeSymbol(int index, Symbol newSymbol){
-        this.symbIndex = index;
-        this.shownSymbol = newSymbol;
     }
 
     public Symbol getShownSymbol(){

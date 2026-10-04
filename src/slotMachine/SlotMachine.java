@@ -49,6 +49,28 @@ public class SlotMachine
     }
 
     /**
+     * Add a wheel to the slot machine in a specific position. 
+     * @param pos The position where the wheel will be added.
+     */
+    public void addWheel(int pos){
+        ok = false;
+
+        if (pos > wheels.size() && !wheels.isEmpty()){
+            pos = normalizePosWheel(pos);
+            pos ++;
+        } 
+        else{
+        pos = normalizePosWheel(pos);
+        }
+        Wheel wh = new Wheel();
+        wheels.add(pos, wh);
+        updateLeftWheels();
+        
+        if(isVisible) psm.reDraw();
+        ok = true;
+    }
+
+    /**
      * Add a wheel to the slot machine in a specific position.
      * @param type The type of the wheel that will be added.
      * @param pos The position where the wheel will be added.
@@ -82,6 +104,7 @@ public class SlotMachine
         }
         
         if (wh != null) wheels.add(pos, wh);
+        updateLeftWheels();
         
         if(isVisible) psm.reDraw();
         ok = true;
@@ -134,6 +157,7 @@ public class SlotMachine
         
         wheels.set(wheel2, firstWheel);
         wheels.set(wheel1, secondWheel);
+        updateLeftWheels();
         if (isVisible) psm.reDraw();    
         ok = true;
     }
@@ -178,6 +202,17 @@ public class SlotMachine
      * @param color The color of the symbol
      */
     public void addSymbol(int pos, String color){
+        addSymbol("normal", pos, color);
+    }
+
+    /**
+     * Add a symbol of a given type in a specific position in order to be used later.
+     * @param type The type of the symbol: "normal", "ephemeral" or "shy".
+     * An unknown type creates a normal symbol
+     * @param pos The position where you want to add the symbol
+     * @param color The color of the symbol
+     */
+    public void addSymbol(String type, int pos, String color){
         ok = false;
         color = normalizeColor(color);
         if (color == null){
@@ -186,10 +221,10 @@ public class SlotMachine
         }
         if (existColor(color)) return;
 
+        Symbol sym = createSymbol(type, color);
+
         pos = normalizePosSym(pos);
-        Symbol sym = new Symbol(color);
         symbols.add(pos, sym);
-        
         for (int i = 0; i < wheels.size(); i++){
             Wheel wh = wheels.get(i);
             
@@ -228,6 +263,7 @@ public class SlotMachine
         }
 
         for (Wheel wh : wheels) {
+            wh.forgetSymbol(symbol);
             // si el simbolo eliminado esta siendo mostrado por alguna
             // rueda entonces se debe actulizar a otro simbolo
             wh.symbolStillExist(symbol, symbols, deletedPos, isVisible);
@@ -273,7 +309,7 @@ public class SlotMachine
         }
         
         if(symb != null){
-            wh.placeSymbol(i, new Symbol(symb)); 
+            wh.showSymbol(i, symb, false);
             if(isVisible) psm.reDrawSymbol(wh, wheel);
         }else{
             messageForUser("El simbolo que desea asignar no fue añadido previamente");
@@ -306,9 +342,8 @@ public class SlotMachine
         int actualIndex = wh.getSymbIndex();
         int nextIndex = (actualIndex+1)%symbols.size();
         
-        Symbol s = symbols.get(nextIndex);
-        wh.placeSymbol(nextIndex, new Symbol(s));
-        
+        wh.showSymbol(nextIndex, symbols.get(nextIndex), true);
+
         if(isVisible){
             // Cuando se usa spin() se repinta cada qe una rueda gira y se ve raro.
             psm.reDrawSymbol(wh, wheel); //estaba sin el Symbols del final
@@ -331,18 +366,19 @@ public class SlotMachine
         int pos = normalizePosWheel(wheel);
         Wheel wh = wheels.get(pos);
         
-        if (wh.isLocked()) return;
-        
+        if (wh.isLocked()){ // Si esta fijo, no cambia de simbolo
+            ok = true;
+            return;
+        }
+
         int movement = (steps > 0) ? 1 : -1;
         int size = symbols.size();
         
         for (int i = 0; i < Math.abs(steps); i++) {
             int actualIndex = wh.getSymbIndex();
             int nextIndex = ((actualIndex + movement) % size + size) % size;
-        
-            Symbol s = symbols.get(nextIndex);
-            wh.placeSymbol(nextIndex, new Symbol(s));
-        
+            wh.showSymbol(nextIndex, symbols.get(nextIndex), true);
+
             if (isVisible) {
                 // Cuando se usa spin() se repinta cada vez que una rueda gira y se ve raro.
                 psm.reDrawSymbol(wh, pos);
@@ -640,7 +676,28 @@ public class SlotMachine
             Wheel wh = new Wheel();
             wheels.add(i, wh);
             Symbol symb = symbols.get(randNum);
-            wh.placeSymbol(randNum, new Symbol(symb));
+            wh.showSymbol(randNum, symb, false);
+        }
+    }
+
+    /**
+     * Create a symbol of a given type.
+     * An unknown type creates a normal symbol.
+     * @param type The type of the symbol: "normal", "ephemeral" or "shy"
+     * @param color The color of the symbol
+     * @return The new symbol
+     */
+    private Symbol createSymbol(String type, String color){
+        if (type == null) return new Symbol(color);
+        switch (type.trim().toLowerCase()) {
+            case "normal":
+                return new Symbol(color);
+            case "ephemeral":
+                return new EphemeralSymbol(color);
+            case "shy":
+                return new ShySymbol(color);
+            default:
+                return new Symbol(color);
         }
     }
 

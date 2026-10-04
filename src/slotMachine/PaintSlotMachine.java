@@ -16,6 +16,7 @@ public class PaintSlotMachine {
     private static final int TILE = 60;
     private static final int HEIGHT_CANVAS = 5; //  5*60 = 300
     private static final int WIDTH_CANVAS = 23; //  23*60 = 1380
+    private static final int MARK_GAP = 3; // separacion entre la figura y su marca
     private boolean visible = false;
     private boolean winning = false;
     private ArrayList<Wheel> wheels;
@@ -23,6 +24,7 @@ public class PaintSlotMachine {
     private ArrayList<Figure> machineFig = new ArrayList<>();
     private ArrayList<Figure> wheelsFig = new ArrayList<>();
     private ArrayList<Figure> symbolsFig = new ArrayList<>();
+    private ArrayList<Figure> marksFig = new ArrayList<>();
     private ArrayList<Figure> leverFig = new ArrayList<>();
 
     /**
@@ -61,38 +63,50 @@ public class PaintSlotMachine {
      */
     public void reDraw(){
         for(Figure f : wheelsFig) f.makeInvisible();
-        for(Figure f : symbolsFig) { 
-            if (f == null) continue;
-            f.makeInvisible();
-        }
-        symbolsFig.clear();
+        eraseSymbols();
         wheelsFig.clear(); 
 
         paintWheels();
         paintSymbols();
 
         for(Figure f : wheelsFig) f.makeVisible();
-        for(Figure f : symbolsFig) {
-            if (f == null) continue;
-            wait(200);
-            f.makeVisible();
-        }
+        showSymbolsSlowly();
     }
     
     /**
      * Draw the recent symbols on the slot machine.
      */
     public void reDrawSymbols(){
-        for(Figure f : symbolsFig) { 
-            if (f == null) continue;
-            f.makeInvisible();
+        eraseSymbols();
+        paintSymbols();
+        showSymbolsSlowly();
+    }
+
+    /**
+     * Erase the figures and marks of the symbols on screen and forget them.
+     */
+    private void eraseSymbols(){
+        for(Figure f : symbolsFig) {
+            if (f != null) f.makeInvisible();
+        }
+        for(Figure f : marksFig) {
+            if (f != null) f.makeInvisible();
         }
         symbolsFig.clear();
-        paintSymbols();
-        for(Figure f : symbolsFig) {
+        marksFig.clear();
+    }
+
+    /**
+     * Show the figures and marks of the symbols one by one.
+     */
+    private void showSymbolsSlowly(){
+        for (int i = 0; i < symbolsFig.size(); i++) {
+            Figure f = symbolsFig.get(i);
             if (f == null) continue;
             wait(200);
             f.makeVisible();
+            Figure mark = marksFig.get(i);
+            if (mark != null) mark.makeVisible();
         }
     }
 
@@ -107,21 +121,38 @@ public class PaintSlotMachine {
         double lenSection = length/numWh;
 
         Figure previousFg = symbolsFig.get(pos);
+        Figure previousMark = marksFig.get(pos);
         wait(60);
-        previousFg.makeInvisible();
+        if (previousFg != null) previousFg.makeInvisible();
+        if (previousMark != null) previousMark.makeInvisible();
 
         Symbol newSym = wh.getShownSymbol();
+        if (!newSym.isVisible()){ // Un simbolo oculto deja la rueda vacia, sin marca
+            symbolsFig.set(pos, null);
+            marksFig.set(pos, null);
+            return;
+        }
         Figure newFg = newSym.getShape();
-
-        newFg.changeColor(newSym.getColor());
-        newFg.changeSize(40);
-
-        double x =  (2 + lenSection*pos)*TILE + ((lenSection*TILE) - 40)/2;
-        int xFinal = (int) x;
-
-        newFg.changePosition(xFinal, 2*TILE + 10);
+        Figure newMark = newSym.getMark();
+        placeFigure(newSym, pos, lenSection);
         symbolsFig.set(pos, newFg);
+        marksFig.set(pos, newMark);
         newFg.makeVisible();
+        if (newMark != null) newMark.makeVisible();
+    }
+
+    private void placeFigure(Symbol symb, int pos, double lenSection){
+        Figure shp = symb.getShape();
+        int sz = symb.getSize();
+        shp.changeColor(symb.getColor());
+        shp.changeSize(sz);
+
+        double x = (2 + lenSection*pos)*TILE + ((lenSection*TILE) - sz)/2;
+        int y = 2*TILE + (TILE - sz)/2;
+        shp.changePosition((int) x, y);
+
+        Figure mark = symb.getMark();
+        if (mark != null) mark.changePosition((int) x, y + sz + MARK_GAP);
     }
 
     /**
@@ -191,20 +222,18 @@ public class PaintSlotMachine {
         
         for (int i = 0; i < numWh; i++) {
             Symbol symb = wheels.get(i).getShownSymbol();
-            if (symb == null || symb.getShape() == null) {
+            if (symb == null || symb.getShape() == null || !symb.isVisible()) {
                 symbolsFig.add(null);
+                marksFig.add(null);
                 continue;
             }
             Figure shp = symb.getShape();
-            shp.changeColor(symb.getColor());
-            shp.changeSize(40);
-
-            double x =  (2 + lenSection*i)*TILE + ((lenSection*TILE) - 40)/2;
-            int xFinal = (int) x;
-
-            shp.changePosition(xFinal, 2*TILE + 10);
-            symbolsFig.add(shp); 
+            Figure mark = symb.getMark();
+            placeFigure(symb, i, lenSection);
+            symbolsFig.add(shp);
+            marksFig.add(mark);
             shp.makeVisible();
+            if (mark != null) mark.makeVisible();
         }
     }
     
@@ -244,10 +273,7 @@ public class PaintSlotMachine {
     private void eraseMachine(){
         for(Figure f : machineFig) f.makeInvisible(); // hace inivisible la maquina
         for(Figure f : leverFig) f.makeInvisible(); // hace invisible la palanca
-        for(Figure f : symbolsFig) { // hace invisible las simbolos
-            if (f == null) continue;
-            f.makeInvisible();
-        } 
+        eraseSymbols(); // hace invisible los simbolos
         for(Figure f : wheelsFig) f.makeInvisible(); // hace invisible las ruedas de la maquina
     }
 

@@ -16,14 +16,19 @@ public class Lefty extends Wheel{
         this.leftWh = leftWh;
     }
     
+    /**
+     * Shows the symbol of the left neighbour wheel if it exists, otherwise shows the symbol of this wheel
+     * @param index The index of the symbol to show
+     * @param template The template of the symbol to show
+     * @param spun Whether the wheel has been spun or not
+     */
     @Override
-    public void placeSymbol(int index, Symbol newSymbol){
-        if(leftWh!=null){
-        this.symbIndex = leftWh.getSymbIndex();
-        this.shownSymbol = leftWh.getShownSymbol();
+    public void showSymbol(int index, Symbol template, boolean spun){
+        if(leftWh != null && leftWh.getShownSymbol() != null){
+            showStateOf(leftWh.getSymbIndex(), leftWh.getShownSymbol());
         }
         else{
-            super.placeSymbol(index, newSymbol);
+            super.showSymbol(index, template, spun);
         }
     }
     
