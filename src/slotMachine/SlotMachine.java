@@ -343,10 +343,10 @@ public class SlotMachine
         int nextIndex = (actualIndex+1)%symbols.size();
         
         wh.showSymbol(nextIndex, symbols.get(nextIndex), true);
-
         if(isVisible){
             // Cuando se usa spin() se repinta cada qe una rueda gira y se ve raro.
             psm.reDrawSymbol(wh, wheel); //estaba sin el Symbols del final
+            updateLeftWheels();
         }
         ok = true;
     }
